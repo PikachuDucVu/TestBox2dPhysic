@@ -14,20 +14,9 @@
                  "name":"",
                  "rotation":0,
                  "visible":true,
-                 "width":1000.1291044455,
+                 "width":1501.46243777883,
                  "x":-1.92068583260152e-14,
                  "y":420.880492318286
-                }, 
-                {
-                 "class":"",
-                 "height":23.242405845621,
-                 "id":13,
-                 "name":"",
-                 "rotation":90.078066204997,
-                 "visible":true,
-                 "width":510.408890448044,
-                 "x":1004.90001575042,
-                 "y":-16.8204869650071
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -45,5 +34,5 @@
  "tilewidth":100,
  "type":"map",
  "version":"1.9",
- "width":10
+ "width":15
 }

@@ -1,12 +1,10 @@
 import {
-  b2Alloc,
   b2Body,
   b2BodyDef,
   b2BodyType,
   b2CircleShape,
   b2Contact,
   b2ContactListener,
-  b2Fixture,
   b2FixtureDef,
   b2PolygonShape,
   b2World,
@@ -27,7 +25,7 @@ import {
   ViewportInputHandler,
 } from "gdxts";
 
-const WORLD_WIDTH = 1000;
+const WORLD_WIDTH = 1300;
 const WORLD_HEIGHT = 500;
 
 const contactListener = new b2ContactListener();
@@ -112,7 +110,6 @@ export const init = async () => {
   camera.setYDown(true);
   batch.setYDown(true);
 
-  const pig = await Texture.load(gl, "./pig.png");
   const bird = await Texture.load(gl, "./bird.png");
   const slingShot = await Texture.load(gl, "./slingshot.png");
   const background = await Texture.load(gl, "./background.png");
@@ -162,23 +159,37 @@ export const init = async () => {
   const boxes: b2Body[] = [];
   let pigNumber = 0;
   let boxNumber = 0;
-  let test1 = 6;
-  let test2 = 4.3;
+  let positionBoxX = 6;
+  let positionBoxY = 4.3;
 
   for (let i = 0; i < 3; i++) {
-    test1 = 6 + i * 0.4;
+    positionBoxX = 6 + i * 0.4;
     for (let j = 0; j <= i; j++) {
       boxes.push(
-        createBox(world, (test1 += 0.51), (test2 -= 0.55), BOX_SIZE, BOX_SIZE, {
-          name: `box ${boxNumber++}`,
-        })
+        createBox(
+          world,
+          (positionBoxX += 0.51),
+          (positionBoxY -= 0.55),
+          BOX_SIZE,
+          BOX_SIZE,
+          {
+            name: `box ${boxNumber++}`,
+          }
+        )
       );
     }
     if (i < 2) {
       pigs.push(
-        createBox(world, test1 + 0.5, test2 - 0.25, PIG_SIZE, PIG_SIZE, {
-          name: `pig ${pigNumber++}`,
-        })
+        createBox(
+          world,
+          positionBoxX + 0.5,
+          positionBoxY - 0.25,
+          PIG_SIZE,
+          PIG_SIZE,
+          {
+            name: `pig ${pigNumber++}`,
+          }
+        )
       );
     }
   }
@@ -261,7 +272,6 @@ export const init = async () => {
       PlayMode.NORMAL
     );
   };
-
   createGameLoop((delta: number) => {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
