@@ -7,11 +7,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 1.16185,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 982.4848302276541,
-                "y": 150.62185307914098
+                "x": 1011.3333333333333,
+                "y": 468
             }
         },
         "walls.tmj": {
@@ -28,12 +28,11 @@
     },
     "map.lastUsedFormat": "json",
     "openFiles": [
-        "untitled.tmj",
-        "walls.tmj"
+        "untitled.tmj"
     ],
     "project": "untitled.tiled-project",
     "recentFiles": [
-        "walls.tmj",
-        "untitled.tmj"
+        "untitled.tmj",
+        "walls.tmj"
     ]
 }

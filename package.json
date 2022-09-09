@@ -1,7 +1,6 @@
 {
   "name": "test-game",
   "version": "0.1.0",
-  "homepage": "https://pikachuducvu.github.io/Angry-Birds/",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
@@ -13,6 +12,7 @@
     "@types/react-dom": "^18.0.5",
     "box2d.ts": "^1.0.2",
     "buffer": "^6.0.3",
+    "flat-ecs": "^2.0.9",
     "gdxts": "^0.1.20",
     "gh-pages": "^4.0.0",
     "react": "^18.2.0",

@@ -9,8 +9,10 @@ import {
   b2PolygonShape,
   b2World,
 } from "box2d.ts";
+import { World } from "flat-ecs";
 import {
   Animation,
+  AssetManager,
   Color,
   createGameLoop,
   createStage,
@@ -24,6 +26,8 @@ import {
   Vector2,
   ViewportInputHandler,
 } from "gdxts";
+import { BackgroundRenderSystem } from "./system/BackgroundRenderSystem";
+import { BirdRenderSystem } from "./system/BirdRenderSystem";
 
 const WORLD_WIDTH = 1300;
 const WORLD_HEIGHT = 500;
@@ -61,14 +65,14 @@ const createBall = (
   const fixtureDef = new b2FixtureDef();
   fixtureDef.shape = circle;
   // fixtureDef.density = 1;
-  fixtureDef.restitution = 0.5; // bounce ball
+  fixtureDef.restitution = 0.5; // bounce bird
   fixtureDef.friction = 1;
   fixtureDef.shape = circle;
-  fixtureDef.userData = "ballFixture";
+  fixtureDef.userData = "birdFixture";
 
   const body = world.CreateBody(bodyDef);
   body.CreateFixture(fixtureDef);
-  body.SetUserData("ball");
+  body.SetUserData("bird");
   return body;
 };
 
@@ -107,20 +111,33 @@ export const init = async () => {
   const camera = viewport.getCamera();
   const batch = new PolygonBatch(gl);
 
+  const assetManager = new AssetManager(gl);
+  await assetManager.loadTexture("./background.png", "bg");
+  await assetManager.loadTexture("./bird.png", "birdAsset");
+
   camera.setYDown(true);
   batch.setYDown(true);
 
-  const bird = await Texture.load(gl, "./bird.png");
+  const physicWorld = new b2World({
+    x: 0,
+    y: 10,
+  });
+  const BALL_RADIUS = 0.2;
+  let bird = createBall(physicWorld, 2, 3.45, BALL_RADIUS);
+
+  const world = new World();
+  world.register("gl", gl);
+  world.register("assetManager", assetManager);
+  world.register("batch", batch);
+  world.register("bird", bird);
+  world.addSystem(new BackgroundRenderSystem(), false);
+  world.addSystem(new BirdRenderSystem(), false);
+
   const slingShot = await Texture.load(gl, "./slingshot.png");
-  const background = await Texture.load(gl, "./background.png");
   const pigAsset = await Texture.load(gl, "./pigAsset.png");
   const mapData = await fetch("./untitled.tmj").then((res) => res.json());
   const wallData = mapData.layers.find((l: any) => l.name === "walls").objects;
   const shapeRenderer = new ShapeRenderer(gl);
-  const world = new b2World({
-    x: 0,
-    y: 10,
-  });
 
   const boxTexture = await Texture.load(gl, "./testAnimation1.png");
   const boxesRegions = TextureRegion.splitTexture(boxTexture, 1, 4);
@@ -145,7 +162,7 @@ export const init = async () => {
 
   for (let wall of wallData) {
     createWall(
-      world,
+      physicWorld,
       wall.x / METER_TO_WORLD,
       wall.y / METER_TO_WORLD,
       wall.width / METER_TO_WORLD,
@@ -167,7 +184,7 @@ export const init = async () => {
     for (let j = 0; j <= i; j++) {
       boxes.push(
         createBox(
-          world,
+          physicWorld,
           (positionBoxX += 0.51),
           (positionBoxY -= 0.55),
           BOX_SIZE,
@@ -181,7 +198,7 @@ export const init = async () => {
     if (i < 2) {
       pigs.push(
         createBox(
-          world,
+          physicWorld,
           positionBoxX + 0.5,
           positionBoxY - 0.25,
           PIG_SIZE,
@@ -194,16 +211,14 @@ export const init = async () => {
     }
   }
 
-  const BALL_RADIUS = 0.2;
-  let ball = createBall(world, 2, 3.5, BALL_RADIUS);
   let hasBirdOnSlingShot = true;
   const originPosition = new Vector2(
-    ball.GetPosition().x * METER_TO_WORLD,
-    ball.GetPosition().y * METER_TO_WORLD
+    bird.GetPosition().x * METER_TO_WORLD,
+    bird.GetPosition().y * METER_TO_WORLD
   );
   let slingPos = new Vector2(
-    ball.GetPosition().x * METER_TO_WORLD,
-    ball.GetPosition().y * METER_TO_WORLD
+    bird.GetPosition().x * METER_TO_WORLD,
+    bird.GetPosition().y * METER_TO_WORLD
   );
 
   const inputHandler = new ViewportInputHandler(viewport);
@@ -215,8 +230,8 @@ export const init = async () => {
   });
   inputHandler.addEventListener(InputEvent.TouchEnd, () => {
     if (hasBirdOnSlingShot) {
-      ball.SetType(b2BodyType.b2_dynamicBody);
-      ball.ApplyLinearImpulseToCenter(
+      bird.SetType(b2BodyType.b2_dynamicBody);
+      bird.ApplyLinearImpulseToCenter(
         {
           x: (7 * (originPosition.x - slingPos.x)) / METER_TO_WORLD,
           y: (7 * (originPosition.y - slingPos.y)) / METER_TO_WORLD,
@@ -230,8 +245,8 @@ export const init = async () => {
 
   window.addEventListener("keydown", function (e) {
     if (!hasBirdOnSlingShot && e.key === "r") {
-      world.DestroyBody(ball);
-      ball = createBall(world, 2, 3.5, BALL_RADIUS);
+      physicWorld.DestroyBody(bird);
+      bird = createBall(physicWorld, 2, 3.5, BALL_RADIUS);
       hasBirdOnSlingShot = true;
     }
   });
@@ -242,7 +257,7 @@ export const init = async () => {
       const fixtureAData = contact.GetFixtureA().GetBody().GetUserData();
       const fixtureBData = contact.GetFixtureB().GetBody().GetUserData();
 
-      // if (fixtureBData !== "ball") return;
+      // if (fixtureBData !== "bird") return;
 
       if (fixtureAData.name && fixtureAData.name.startsWith("box")) {
         fixtureAData.durability += 1;
@@ -258,7 +273,7 @@ export const init = async () => {
     // console.log(contact);
   };
 
-  world.SetContactListener(contactListener);
+  physicWorld.SetContactListener(contactListener);
 
   const updateBoxRegionByDurability = (index: number, durability: number) => {
     boxRegions[index] = boxAnimation.getKeyFrame(
@@ -275,6 +290,11 @@ export const init = async () => {
   createGameLoop((delta: number) => {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
+    batch.setProjection(camera.combined);
+    world.setDelta(delta);
+    world.processActiveSystem();
+    world.processPassiveSystem();
+
     for (let i = 0; i < boxes.length; i++) {
       const elementBox = boxes[i];
       const boxDurability = elementBox.GetUserData().durability;
@@ -282,7 +302,7 @@ export const init = async () => {
         if (boxDurability <= 4) {
           updateBoxRegionByDurability(i, boxDurability);
         } else {
-          world.DestroyBody(boxes[i]);
+          physicWorld.DestroyBody(boxes[i]);
           boxes.splice(i, 1);
         }
       }
@@ -294,51 +314,17 @@ export const init = async () => {
         if (pigDurability <= 1) {
           updatePigRegionByDurability(i, pigDurability);
         } else {
-          world.DestroyBody(pigs[i]);
+          physicWorld.DestroyBody(pigs[i]);
           pigs.splice(i, 1);
         }
       }
     }
 
-    world.Step(delta, 8, 3);
-    batch.setProjection(camera.combined);
+    physicWorld.Step(delta, 8, 3);
 
     shapeRenderer.setProjection(camera.combined);
     shapeRenderer.begin();
-    shapeRenderer.rect(true, 0, 0, WORLD_WIDTH, WORLD_HEIGHT, Color.WHITE);
 
-    for (let wall of wallData) {
-      shapeRenderer.rect(
-        true,
-        wall.x,
-        wall.y,
-        wall.width,
-        wall.height,
-        WALL_COLOR
-      );
-    }
-    shapeRenderer.rect(
-      true,
-      2 * METER_TO_WORLD,
-      3.5 * METER_TO_WORLD,
-      0.25 * METER_TO_WORLD,
-      0.7 * METER_TO_WORLD,
-      Color.MAGENTA
-    );
-    shapeRenderer.circle(
-      true,
-      ball.GetPosition().x * METER_TO_WORLD,
-      ball.GetPosition().y * METER_TO_WORLD,
-      BALL_RADIUS * METER_TO_WORLD,
-      Color.RED
-    );
-    shapeRenderer.end();
-
-    batch.begin();
-    batch.draw(background, 0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-    batch.end();
-
-    shapeRenderer.begin();
     shapeRenderer.circle(
       true,
       slingPos.x,
@@ -346,7 +332,6 @@ export const init = async () => {
       0.1 * METER_TO_WORLD,
       Color.BLUE
     );
-
     shapeRenderer.end();
 
     batch.begin();
@@ -382,14 +367,6 @@ export const init = async () => {
       );
     }
     // console.log(box.GetContactList());
-
-    batch.draw(
-      bird,
-      ball.GetPosition().x * METER_TO_WORLD - 25,
-      ball.GetPosition().y * METER_TO_WORLD - 25,
-      BOX_SIZE * METER_TO_WORLD,
-      BOX_SIZE * METER_TO_WORLD
-    );
 
     delayTime += delta;
     batch.end();
