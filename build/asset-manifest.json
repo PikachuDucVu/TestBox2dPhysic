@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/static/js/main.fa9a0cbe.js",
-    "index.html": "/index.html",
-    "main.fa9a0cbe.js.map": "/static/js/main.fa9a0cbe.js.map"
+    "main.js": "/Angry-Birds/static/js/main.f72b291f.js",
+    "index.html": "/Angry-Birds/index.html",
+    "main.f72b291f.js.map": "/Angry-Birds/static/js/main.f72b291f.js.map"
   },
   "entrypoints": [
-    "static/js/main.fa9a0cbe.js"
+    "static/js/main.f72b291f.js"
   ]
 }

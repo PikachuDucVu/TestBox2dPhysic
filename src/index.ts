@@ -22,7 +22,7 @@ import {
   Vector2,
   ViewportInputHandler,
 } from "gdxts";
-import { ContactListenerSystem } from "./ContactListenerSystem";
+import { ContactListenerSystem } from "./system/ContactListenerSystem";
 import { BackgroundRenderSystem } from "./system/BackgroundRenderSystem";
 import { BirdRenderSystem } from "./system/BirdRenderSystem";
 import { BoxesAndPigsRenderSystem } from "./system/BoxesAndPigsRenderSystem";
@@ -213,7 +213,6 @@ export const init = async () => {
   world.addSystem(new SlingshotRenderSystem(), false);
   world.addSystem(new ContactListenerSystem(), false);
 
-  console.log(contactListener);
   gl.clearColor(0, 0, 0, 1);
   physicWorld.SetContactListener(contactListener);
 
