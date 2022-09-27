@@ -4,6 +4,112 @@
  "layers":[
         {
          "draworder":"topdown",
+         "id":4,
+         "name":"boxes",
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":27,
+                 "name":"box",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":844,
+                 "y":398.666666666667
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":31,
+                 "name":"box",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":944,
+                 "y":397.333333333333
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":32,
+                 "name":"box",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1040,
+                 "y":400
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":33,
+                 "name":"box",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":890.666666666666,
+                 "y":301.333333333333
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":34,
+                 "name":"box",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":990.666666666667,
+                 "y":300
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":35,
+                 "name":"box",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":940,
+                 "y":208
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"pigs",
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":39,
+                 "name":"pig",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":890.666333333333,
+                 "y":399.999666666667
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":3,
          "name":"walls",
          "objects":[
@@ -24,8 +130,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":4,
- "nextobjectid":15,
+ "nextlayerid":6,
+ "nextobjectid":42,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.0",

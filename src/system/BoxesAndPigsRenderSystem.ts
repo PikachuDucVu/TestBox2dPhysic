@@ -9,6 +9,7 @@ import {
   PlayMode,
 } from "gdxts";
 import { Constants } from "../Constants";
+import { LevelState } from "../data/LevelState";
 export class BoxesAndPigsRenderSystem extends System {
   boxAsset: Texture;
   pigAsset: Texture;
@@ -23,6 +24,7 @@ export class BoxesAndPigsRenderSystem extends System {
   @Inject("boxes") boxes: b2Body[];
   @Inject("pigs") pigs: b2Body[];
   @Inject("physicWorld") physicWorld: b2World;
+  @Inject("levelState") levelState: LevelState;
 
   initialized(): void {
     this.boxAsset = this.assetManager.getTexture("boxAsset") as Texture;
@@ -66,26 +68,19 @@ export class BoxesAndPigsRenderSystem extends System {
     };
 
     for (let i = 0; i < this.boxes.length; i++) {
-      const elementBox = this.boxes[i];
-      const boxDurability = elementBox.GetUserData().durability;
-      if (typeof boxDurability === "number") {
-        if (boxDurability <= 4) {
-          updateBoxRegionByDurability(i, boxDurability);
-        } else {
-          this.physicWorld.DestroyBody(this.boxes[i]);
-          this.boxes.splice(i, 1);
+      if (typeof this.boxes[i].GetUserData().durability === "number") {
+        if (this.boxes[i].GetUserData().durability <= 4) {
+          updateBoxRegionByDurability(
+            i,
+            this.boxes[i].GetUserData().durability
+          );
         }
       }
     }
     for (let i = 0; i < this.pigs.length; i++) {
-      const elementPig = this.pigs[i];
-      const pigDurability = elementPig.GetUserData().durability;
-      if (typeof pigDurability === "number") {
-        if (pigDurability <= 1) {
-          updatePigRegionByDurability(i, pigDurability);
-        } else {
-          this.physicWorld.DestroyBody(this.pigs[i]);
-          this.pigs.splice(i, 1);
+      if (typeof this.pigs[i].GetUserData().durability === "number") {
+        if (this.pigs[i].GetUserData().durability <= 1) {
+          updatePigRegionByDurability(i, this.pigs[i].GetUserData().durability);
         }
       }
     }

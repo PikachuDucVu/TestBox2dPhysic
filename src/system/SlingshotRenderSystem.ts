@@ -2,13 +2,10 @@ import { b2Body, b2BodyType } from "box2d.ts";
 import { System, Inject } from "flat-ecs";
 import {
   AssetManager,
-  Color,
-  InputEvent,
   PolygonBatch,
   ShapeRenderer,
   Texture,
   Vector2,
-  ViewportInputHandler,
 } from "gdxts";
 import { Constants } from "../Constants";
 
