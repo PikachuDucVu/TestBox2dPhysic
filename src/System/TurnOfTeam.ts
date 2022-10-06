@@ -47,6 +47,7 @@ export class TurnOfTeam extends System {
               )
             );
           }
+
           this.StateGame.changeTurn = false;
           this.originPosition.set(
             this.ballsTeam2[1].GetPosition().x *
