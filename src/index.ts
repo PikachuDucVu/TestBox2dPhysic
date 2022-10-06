@@ -17,6 +17,7 @@ export const init = async () => {
     Constants.WORLD_HEIGHT
   );
   const gl = viewport.getContext();
+  console.log("dcm");
   const assetManager = new AssetManager(gl);
   Game.shared.setScreen(await createGameScreen(assetManager, viewport));
   createGameLoop((delta: number) => {
