@@ -1,4 +1,4 @@
-import { b2Body, b2World } from "box2d.ts";
+import { b2Body, b2ContactListener, b2World } from "box2d.ts";
 import { World } from "flat-ecs";
 import {
   AssetManager,
@@ -13,6 +13,7 @@ import { Constants } from "../Constant";
 import { StateGame } from "../dataGame/stateGame";
 import { PhysicDebugSystem } from "../RenderSystem/physicDebugSystem";
 import { RenderSystem } from "../RenderSystem/RenderSystem";
+import { ContactListenerSystem } from "../System/ContactListener";
 import { InputHandlerSystem } from "../System/inputHandlerSystem";
 import { TurnOfTeam } from "../System/TurnOfTeam";
 import { createBall, createGround, createPerson } from "../System/utils";
@@ -98,6 +99,7 @@ export const createGameScreen = async (
     );
   }
   const inputHandle = new ViewportInputHandler(viewport);
+  const contactListener = new b2ContactListener();
   const StateGame: StateGame = {
     WhoisTurning: 1,
     CooldownTime: 999,
@@ -129,11 +131,14 @@ export const createGameScreen = async (
   world.register("originPosition", originPosition);
   world.register("dragPositioning", dragPositioning);
   world.register("StateGame", StateGame);
+  world.register("contactListener", contactListener);
 
   world.addSystem(new PhysicDebugSystem(), true);
   world.addSystem(new RenderSystem(), true);
   world.addSystem(new InputHandlerSystem(), true);
   world.addSystem(new TurnOfTeam(), true);
+  world.addSystem(new ContactListenerSystem(), true)
+  
 
   return {
     update(delta: number) {

@@ -75,7 +75,6 @@ export class InputHandlerSystem extends System {
   }
 
   process(): void {
-    console.log(this.originPosition);
     if (this.StateGame.CooldownTime < 0) {
       this.hasFired = false;
     }

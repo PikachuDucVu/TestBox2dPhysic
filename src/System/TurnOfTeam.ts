@@ -24,7 +24,6 @@ export class TurnOfTeam extends System {
     this.ball2 = this.mapData.layers.find(
       (b: any) => b.name === "ball2"
     ).objects;
-    console.log(this.ball1);
   }
 
   process(): void {
@@ -35,7 +34,6 @@ export class TurnOfTeam extends System {
           for (let i = 3; i >= 0; i--) {
             this.physicWorld.DestroyBody(this.ballsTeam1[i]);
             this.ballsTeam1.splice(i, 1);
-            console.log("dcm1");
           }
           for (let box of this.ball2) {
             this.ballsTeam2.push(
@@ -60,7 +58,6 @@ export class TurnOfTeam extends System {
           for (let i = 3; i >= 0; i--) {
             this.physicWorld.DestroyBody(this.ballsTeam2[i]);
             this.ballsTeam2.splice(i, 1);
-            console.log("dcm2");
           }
           for (let box of this.ball1) {
             this.ballsTeam1.push(
