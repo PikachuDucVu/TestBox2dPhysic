@@ -2,13 +2,11 @@ import { b2Body } from "box2d.ts";
 import { System, Inject } from "flat-ecs";
 import {
   AssetManager,
-  Color,
   PolygonBatch,
   ShapeRenderer,
   Texture,
   Vector2,
 } from "gdxts";
-import { Constants } from "../Constant";
 import { StateGame } from "../dataGame/stateGame";
 
 export class RenderSystem extends System {
@@ -35,13 +33,6 @@ export class RenderSystem extends System {
 
   process(): void {
     this.shapeRenderer.begin();
-    this.shapeRenderer.rect(
-      true,
-      this.dragPositioning.x,
-      this.dragPositioning.y,
-      30,
-      30
-    );
 
     this.shapeRenderer.end();
     this.batch.setYDown(false);

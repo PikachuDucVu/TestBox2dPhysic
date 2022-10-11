@@ -53,7 +53,7 @@ export class TurnOfTeam extends System {
                 this.ball2[i].x / Constants.METER_TO_PHYSIC_WORLD,
                 (this.MAP_HEIGHT - this.ball2[i].y) /
                   Constants.METER_TO_PHYSIC_WORLD,
-                0.1
+                0.15
               )
             );
           }
@@ -76,7 +76,7 @@ export class TurnOfTeam extends System {
                 this.ball1[i].x / Constants.METER_TO_PHYSIC_WORLD,
                 (this.MAP_HEIGHT - this.ball1[i].y) /
                   Constants.METER_TO_PHYSIC_WORLD,
-                0.1
+                0.15
               )
             );
             this.StateGame.WhoisTurning = 1;

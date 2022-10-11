@@ -22,7 +22,7 @@ export class ContactListenerSystem extends System {
   process(): void {
     for (let i = 0; i < this.Team1.length; i++) {
       if (typeof this.Team1[i].GetUserData().durability === "number") {
-        if (this.Team1[i].GetUserData().durability <= 3) {
+        if (this.Team1[i].GetUserData().durability <= 4) {
         } else {
           this.physicWorld.DestroyBody(this.Team1[i]);
           this.Team1.splice(i, 1);
@@ -31,7 +31,7 @@ export class ContactListenerSystem extends System {
     }
     for (let i = 0; i < this.Team2.length; i++) {
       if (typeof this.Team2[i].GetUserData().durability === "number") {
-        if (this.Team2[i].GetUserData().durability <= 3) {
+        if (this.Team2[i].GetUserData().durability <= 4) {
         } else {
           this.physicWorld.DestroyBody(this.Team2[i]);
           this.Team2.splice(i, 1);

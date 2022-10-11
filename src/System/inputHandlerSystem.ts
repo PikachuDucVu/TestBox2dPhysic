@@ -1,4 +1,4 @@
-import { b2Body, b2BodyType, b2Vec2 } from "box2d.ts";
+import { b2Body, b2BodyType } from "box2d.ts";
 import { Inject, System } from "flat-ecs";
 import {
   Color,
@@ -19,9 +19,9 @@ const tmpP = new Vector2(0, 0);
 const tmpG = new Vector2(0, 0);
 const GRAVITY = -10;
 
-function getRandomInt(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
+// function getRandomInt(min: number, max: number) {
+//   return Math.floor(Math.random() * (max - min)) + min;
+// }
 const getTrajectoryPoint = (
   startPos: Vector2,
   startV: Vector2,
@@ -80,12 +80,12 @@ export class InputHandlerSystem extends System {
       this.hasFired = false;
     }
     this.dragPositioning = this.inputHandle.getTouchedWorldCoord();
-    if (this.inputHandle.isTouched()) {
+    if (this.inputHandle.isTouched() && this.StateGame.conditionWin === false) {
       if (!this.dragging) {
         this.dragging = true;
       }
     } else {
-      if (this.dragging) {
+      if (this.dragging && this.hasFired === false) {
         const impulse = calculateImpulse(
           this.originPosition,
           this.dragPositioning
@@ -112,7 +112,7 @@ export class InputHandlerSystem extends System {
     }
     this.shapeRenderer.begin();
 
-    if (this.dragging) {
+    if (this.dragging && this.hasFired === false) {
       tmpV2
         .set(this.originPosition.x, this.originPosition.y)
         .sub(this.dragPositioning.x, this.dragPositioning.y);
@@ -122,7 +122,6 @@ export class InputHandlerSystem extends System {
       } else {
         tmpV2.setVector(this.dragPositioning);
       }
-      console.log(this.dragPositioning);
       this.shapeRenderer.rectLine(
         true,
         this.originPosition.x,

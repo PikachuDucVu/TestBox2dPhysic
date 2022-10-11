@@ -1,16 +1,13 @@
 import {
-  b2Body,
   b2BodyType,
   b2CircleShape,
   b2PolygonShape,
   b2ShapeType,
   b2World,
-  b2_pi,
 } from "box2d.ts";
 import { Inject, System } from "flat-ecs";
 import { Color, ShapeRenderer, Vector2 } from "gdxts";
 import { Constants } from "../Constant";
-import { StateGame } from "../dataGame/stateGame";
 
 export class PhysicDebugSystem extends System {
   @Inject("physicWorld") physicWorld: b2World;
@@ -37,7 +34,7 @@ export class PhysicDebugSystem extends System {
         if (type === b2ShapeType.e_circleShape) {
           const data = fixture.GetShape() as b2CircleShape;
           this.shapeRenderer.circle(
-            false,
+            true,
             position.x * Constants.METER_TO_PHYSIC_WORLD,
             position.y * Constants.METER_TO_PHYSIC_WORLD,
             data.m_radius * Constants.METER_TO_PHYSIC_WORLD,

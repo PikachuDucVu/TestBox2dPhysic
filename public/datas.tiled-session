@@ -18,12 +18,12 @@
         },
         "datas.tmj": {
             "expandedObjectLayers": [
+                3,
                 5,
-                2,
-                3
+                2
             ],
             "scale": 0.33,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
                 "x": 1827.2727272727273,
                 "y": 354.5454545454546
