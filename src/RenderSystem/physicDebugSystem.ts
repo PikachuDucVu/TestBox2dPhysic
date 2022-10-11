@@ -5,9 +5,10 @@ import {
   b2PolygonShape,
   b2ShapeType,
   b2World,
+  b2_pi,
 } from "box2d.ts";
 import { Inject, System } from "flat-ecs";
-import { Color, ShapeRenderer } from "gdxts";
+import { Color, ShapeRenderer, Vector2 } from "gdxts";
 import { Constants } from "../Constant";
 import { StateGame } from "../dataGame/stateGame";
 
@@ -15,6 +16,7 @@ export class PhysicDebugSystem extends System {
   @Inject("physicWorld") physicWorld: b2World;
   @Inject("shapeRenderer") shapeRenderer: ShapeRenderer;
 
+  tmpVector2 = new Vector2(0, 0);
   vertices: number[] = [];
   debugColors: Map<b2BodyType, Color> = new Map<b2BodyType, Color>();
   initialized() {
@@ -45,7 +47,15 @@ export class PhysicDebugSystem extends System {
         if (type === b2ShapeType.e_polygonShape) {
           const data = fixture.GetShape() as b2PolygonShape;
           this.vertices.length = 0;
+
           for (let i = 0; i < data.m_vertices.length; i++) {
+            // this.tmpVector2
+            //   .set(data.m_vertices[i].x, data.m_vertices[i].y)
+            //   .rotate(angle)
+            //   .add(position.x, position.y)
+            //   .scale(Constants.METER_TO_PHYSIC_WORLD);
+            // this.vertices.push(this.tmpVector2.x, this.tmpVector2.y);
+
             this.vertices.push(
               (data.m_vertices[i].x + position.x) *
                 Constants.METER_TO_PHYSIC_WORLD

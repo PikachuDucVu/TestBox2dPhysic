@@ -17,7 +17,12 @@ export const init = async () => {
     Constants.WORLD_HEIGHT
   );
   const gl = viewport.getContext();
+
   const assetManager = new AssetManager(gl);
+  await assetManager.loadTexture("./bloodBar.png", "bloodBar");
+  await assetManager.loadTexture("./vsAsset.png", "vsAsset");
+  await assetManager.loadTexture("./winningAsset.png", "winningAsset");
+
   Game.shared.setScreen(await createGameScreen(assetManager, viewport));
   createGameLoop((delta: number) => {
     Game.shared.update(delta);

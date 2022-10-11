@@ -1,0 +1,47 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "datas.tmj",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "C:/Users/ducvu/OneDrive/Desktop/Angry-Birds-main/public/level1.tmj": {
+            "scale": 1.0245384615384614,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 649.5607778361739,
+                "y": 250.35663338088446
+            }
+        },
+        "datas.tmj": {
+            "expandedObjectLayers": [
+                5,
+                2,
+                3
+            ],
+            "scale": 0.33,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 1827.2727272727273,
+                "y": 354.5454545454546
+            }
+        }
+    },
+    "map.height": 10,
+    "map.lastUsedFormat": "json",
+    "map.tileHeight": 100,
+    "map.tileWidth": 100,
+    "openFiles": [
+        "C:/Users/ducvu/OneDrive/Desktop/Angry-Birds-main/public/level1.tmj",
+        "datas.tmj"
+    ],
+    "project": "datas.tiled-project",
+    "recentFiles": [
+        "C:/Users/ducvu/OneDrive/Desktop/Angry-Birds-main/public/level1.tmj",
+        "datas.tmj"
+    ],
+    "resizeMap.removeObjects": false
+}

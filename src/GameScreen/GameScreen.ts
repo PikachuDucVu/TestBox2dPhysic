@@ -28,6 +28,7 @@ export const createGameScreen = async (
   const batch = new PolygonBatch(gl);
   const shapeRenderer = new ShapeRenderer(gl);
   gl.clearColor(0, 0, 0, 1);
+  batch.setYDown(true);
 
   const world = new World();
   const physicWorld = new b2World({
@@ -47,7 +48,6 @@ export const createGameScreen = async (
   ).objects;
 
   const ball1 = mapData.layers.find((b: any) => b.name === "ball1").objects;
-  const ball2 = mapData.layers.find((b: any) => b.name === "ball2").objects;
 
   let grounds: b2Body[] = [];
   let Team1: b2Body[] = [];
@@ -60,7 +60,7 @@ export const createGameScreen = async (
         physicWorld,
         box.x / Constants.METER_TO_PHYSIC_WORLD,
         (MAP_HEIGHT - box.y) / Constants.METER_TO_PHYSIC_WORLD,
-        0.25
+        0.15
       )
     );
   }
@@ -83,7 +83,8 @@ export const createGameScreen = async (
         person1.x / Constants.METER_TO_PHYSIC_WORLD,
         (MAP_HEIGHT - person1.y) / Constants.METER_TO_PHYSIC_WORLD,
         person1.width / Constants.METER_TO_PHYSIC_WORLD,
-        person1.height / Constants.METER_TO_PHYSIC_WORLD
+        person1.height / Constants.METER_TO_PHYSIC_WORLD,
+        { name: "Person" }
       )
     );
   }
@@ -94,7 +95,8 @@ export const createGameScreen = async (
         person2.x / Constants.METER_TO_PHYSIC_WORLD,
         (MAP_HEIGHT - person2.y) / Constants.METER_TO_PHYSIC_WORLD,
         person2.width / Constants.METER_TO_PHYSIC_WORLD,
-        person2.height / Constants.METER_TO_PHYSIC_WORLD
+        person2.height / Constants.METER_TO_PHYSIC_WORLD,
+        { name: "Person" }
       )
     );
   }
@@ -104,6 +106,7 @@ export const createGameScreen = async (
     WhoisTurning: 1,
     CooldownTime: 999,
     changeTurn: false,
+    conditionWin: false,
   };
 
   const originPosition = new Vector2(
@@ -114,10 +117,10 @@ export const createGameScreen = async (
     ballsTeam1[1].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
     ballsTeam1[1].GetPosition().y * Constants.METER_TO_PHYSIC_WORLD
   );
-
   world.register("gl", gl);
   world.register("viewport", viewport);
   world.register("batch", batch);
+  world.register("camera", camera);
   world.register("assetManager", assetManager);
   world.register("physicWorld", physicWorld);
   world.register("inputHandle", inputHandle);
@@ -134,11 +137,10 @@ export const createGameScreen = async (
   world.register("contactListener", contactListener);
 
   world.addSystem(new PhysicDebugSystem(), true);
-  world.addSystem(new RenderSystem(), true);
-  world.addSystem(new InputHandlerSystem(), true);
   world.addSystem(new TurnOfTeam(), true);
-  world.addSystem(new ContactListenerSystem(), true)
-  
+  world.addSystem(new ContactListenerSystem(), true);
+  world.addSystem(new RenderSystem(), false);
+  world.addSystem(new InputHandlerSystem(), true);
 
   return {
     update(delta: number) {
