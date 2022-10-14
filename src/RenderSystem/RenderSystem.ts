@@ -50,11 +50,11 @@ export class RenderSystem extends System {
     this.batch.draw(this.bloodBar, 1500, 1200, 100 * this.Team2.length, 100);
     this.batch.draw(this.vsAsset, 1400, 1200, 100, 100, 50, 50);
 
-    if (this.Team1.length === 0 && this.StateGame.CooldownTime <= 0) {
+    if (this.Team1.length === 0) {
       this.batch.draw(this.winningAsset, 1750, 300, 1000, 1000);
     }
-    if (this.Team2.length === 0 && this.StateGame.CooldownTime <= 0) {
-      this.batch.draw(this.winningAsset, 250, 300, 1000, 1000);
+    if (this.Team2.length === 0) {
+      this.batch.draw(this.winningAsset, 1750, 300, 1000, 1000);
     }
     this.batch.end();
   }

@@ -1,4 +1,4 @@
-import { b2Body, b2World } from "box2d.ts";
+import { b2Body, b2BodyType, b2World } from "box2d.ts";
 import { System, Inject } from "flat-ecs";
 import { Vector2 } from "gdxts";
 import { Constants } from "../Constant";
@@ -45,15 +45,21 @@ export class TurnOfTeam extends System {
             this.physicWorld.DestroyBody(this.ballsTeam1[i]);
             this.ballsTeam1.splice(i, 1);
           }
-
+          for (let i = this.Team1.length - 1; i >= 0; i--) {
+            this.Team1[i].SetActive(true);
+          }
+          for (let i = 0; i < this.Team2.length; i++) {
+            this.Team2[i].SetActive(false);
+          }
           for (let i = 0; i < this.Team2.length; i++) {
             this.ballsTeam2.push(
               createBall(
                 this.physicWorld,
-                this.ball2[i].x / Constants.METER_TO_PHYSIC_WORLD,
-                (this.MAP_HEIGHT - this.ball2[i].y) /
-                  Constants.METER_TO_PHYSIC_WORLD,
-                0.15
+                this.Team2[i].GetPosition().x + 0.2,
+                this.Team2[i].GetPosition().y + 0.1,
+                0.15,
+                Constants.BALLTEAM2_CATEGORY_BIT,
+                Constants.BALLTEAM2_MASK_BIT
               )
             );
           }
@@ -69,17 +75,25 @@ export class TurnOfTeam extends System {
             this.physicWorld.DestroyBody(this.ballsTeam2[i]);
             this.ballsTeam2.splice(i, 1);
           }
+          for (let i = this.Team2.length - 1; i >= 0; i--) {
+            this.Team2[i].SetActive(true);
+          }
+          for (let i = this.Team1.length - 1; i >= 0; i--) {
+            // this.Team1[i].SetType(b2BodyType.b2_staticBody);
+            this.Team1[i].SetActive(false);
+            this.StateGame.WhoisTurning = 1;
+          }
           for (let i = 0; i < this.Team1.length; i++) {
             this.ballsTeam1.push(
               createBall(
                 this.physicWorld,
-                this.ball1[i].x / Constants.METER_TO_PHYSIC_WORLD,
-                (this.MAP_HEIGHT - this.ball1[i].y) /
-                  Constants.METER_TO_PHYSIC_WORLD,
-                0.15
+                this.Team1[i].GetPosition().x + 0.2,
+                this.Team1[i].GetPosition().y + 0.1,
+                0.15,
+                Constants.BALLTEAM1_CATEGORY_BIT,
+                Constants.BALLTEAM1_MASK_BIT
               )
             );
-            this.StateGame.WhoisTurning = 1;
           }
 
           this.StateGame.changeTurn = false;

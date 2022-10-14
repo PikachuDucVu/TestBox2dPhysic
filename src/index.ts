@@ -7,7 +7,6 @@ import {
 } from "gdxts";
 import { Constants } from "./Constant";
 import { createGameScreen } from "./GameScreen/GameScreen";
-import { StateGame } from "./dataGame/stateGame";
 
 export const init = async () => {
   const stage = createStage();
@@ -25,11 +24,7 @@ export const init = async () => {
   await assetManager.loadTexture("./winningAsset.png", "winningAsset");
 
   Game.shared.setScreen(await createGameScreen(assetManager, viewport));
-  window.addEventListener("keydown", async (e) => {
-    if (e.key === " ") {
-      Game.shared.setScreen(await createGameScreen(assetManager, viewport));
-    }
-  });
+
   createGameLoop((delta: number) => {
     Game.shared.update(delta);
   });

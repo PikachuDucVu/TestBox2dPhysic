@@ -103,10 +103,10 @@ export class InputHandlerSystem extends System {
           }
         }
         this.hasFired = true;
-        this.StateGame.CooldownTime = 5;
+        this.StateGame.CooldownTime = 6;
         setTimeout(() => {
           this.StateGame.changeTurn = true;
-        }, 5000);
+        }, 6000);
         this.dragging = false;
       }
     }

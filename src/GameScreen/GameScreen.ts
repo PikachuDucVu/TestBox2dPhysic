@@ -1,4 +1,4 @@
-import { b2Body, b2ContactListener, b2World } from "box2d.ts";
+import { b2Body, b2BodyType, b2ContactListener, b2World } from "box2d.ts";
 import { World } from "flat-ecs";
 import {
   AssetManager,
@@ -15,8 +15,17 @@ import { PhysicDebugSystem } from "../RenderSystem/physicDebugSystem";
 import { RenderSystem } from "../RenderSystem/RenderSystem";
 import { ContactListenerSystem } from "../System/ContactListener";
 import { InputHandlerSystem } from "../System/inputHandlerSystem";
+import { NextLevelSystem } from "../System/NextLevelSystem";
 import { TurnOfTeam } from "../System/TurnOfTeam";
 import { createBall, createGround, createPerson } from "../System/utils";
+
+const stateGame: StateGame = {
+  currentLevel: 1,
+  WhoisTurning: 1,
+  CooldownTime: 999,
+  changeTurn: false,
+  conditionWin: false,
+};
 
 const MAP_HEIGHT = 1000; // map height
 export const createGameScreen = async (
@@ -36,7 +45,9 @@ export const createGameScreen = async (
     y: -10,
   });
 
-  const mapData = await fetch("./datas.tmj").then((res) => res.json());
+  const mapData = await fetch(`./level${stateGame.currentLevel}.tmj`).then(
+    (res) => res.json()
+  );
   const groundData = mapData.layers.find(
     (w: any) => w.name === "Ground"
   ).objects;
@@ -54,16 +65,6 @@ export const createGameScreen = async (
   let Team2: b2Body[] = [];
   let ballsTeam1: b2Body[] = [];
   let ballsTeam2: b2Body[] = [];
-  for (let box of ball1) {
-    ballsTeam1.push(
-      createBall(
-        physicWorld,
-        box.x / Constants.METER_TO_PHYSIC_WORLD,
-        (MAP_HEIGHT - box.y) / Constants.METER_TO_PHYSIC_WORLD,
-        0.15
-      )
-    );
-  }
 
   for (let ground of groundData) {
     grounds.push(
@@ -84,10 +85,30 @@ export const createGameScreen = async (
         (MAP_HEIGHT - person1.y) / Constants.METER_TO_PHYSIC_WORLD,
         person1.width / Constants.METER_TO_PHYSIC_WORLD,
         person1.height / Constants.METER_TO_PHYSIC_WORLD,
-        { name: "Person" }
+        { name: "Person1" },
+        Constants.PERSONTEAM1_CATEGORY_BIT,
+        Constants.PERSONTEAM1_MASK_BIT
       )
     );
   }
+
+  for (let i = Team1.length - 1; i >= 0; i--) {
+    Team1[i].SetActive(false);
+  }
+
+  for (let i = 0; i < Team1.length; i++) {
+    ballsTeam1.push(
+      createBall(
+        physicWorld,
+        Team1[i].GetPosition().x + 0.2,
+        Team1[i].GetPosition().y + 0.2,
+        0.15,
+        Constants.BALLTEAM1_CATEGORY_BIT,
+        Constants.BALLTEAM1_MASK_BIT
+      )
+    );
+  }
+
   for (let person2 of personTeam2Data) {
     Team2.push(
       createPerson(
@@ -96,18 +117,14 @@ export const createGameScreen = async (
         (MAP_HEIGHT - person2.y) / Constants.METER_TO_PHYSIC_WORLD,
         person2.width / Constants.METER_TO_PHYSIC_WORLD,
         person2.height / Constants.METER_TO_PHYSIC_WORLD,
-        { name: "Person" }
+        { name: "Person2" },
+        Constants.PERSONTEAM2_CATEGORY_BIT,
+        Constants.PERSONTEAM2_MASK_BIT
       )
     );
   }
   const inputHandle = new ViewportInputHandler(viewport);
   const contactListener = new b2ContactListener();
-  const StateGame: StateGame = {
-    WhoisTurning: 1,
-    CooldownTime: 999,
-    changeTurn: false,
-    conditionWin: false,
-  };
 
   const originPosition = new Vector2(
     ballsTeam1[1].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
@@ -133,7 +150,7 @@ export const createGameScreen = async (
   world.register("ballsTeam2", ballsTeam2);
   world.register("originPosition", originPosition);
   world.register("dragPositioning", dragPositioning);
-  world.register("StateGame", StateGame);
+  world.register("StateGame", stateGame);
   world.register("contactListener", contactListener);
 
   world.addSystem(new PhysicDebugSystem(), true);
@@ -141,6 +158,7 @@ export const createGameScreen = async (
   world.addSystem(new ContactListenerSystem(), true);
   world.addSystem(new RenderSystem(), false);
   world.addSystem(new InputHandlerSystem(), true);
+  world.addSystem(new NextLevelSystem(), true);
 
   return {
     update(delta: number) {
@@ -151,7 +169,7 @@ export const createGameScreen = async (
       world.processActiveSystem();
       world.processPassiveSystem();
       physicWorld.Step(delta, 8, 3);
-      StateGame.CooldownTime -= delta;
+      stateGame.CooldownTime -= delta;
     },
     dispose(): void {},
   };
