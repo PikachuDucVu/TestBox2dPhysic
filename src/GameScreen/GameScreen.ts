@@ -2,6 +2,7 @@ import { b2Body, b2BodyType, b2ContactListener, b2World } from "box2d.ts";
 import { World } from "flat-ecs";
 import {
   AssetManager,
+  InputEvent,
   PolygonBatch,
   Screen,
   ShapeRenderer,
@@ -25,6 +26,8 @@ const stateGame: StateGame = {
   CooldownTime: 999,
   changeTurn: false,
   conditionWin: false,
+  setupTeam1: false,
+  setupTeam2: false,
 };
 
 const MAP_HEIGHT = 1000; // map height
@@ -32,6 +35,9 @@ export const createGameScreen = async (
   assetManager: AssetManager,
   viewport: Viewport
 ): Promise<Screen> => {
+  if (stateGame.currentLevel > 3) {
+    stateGame.currentLevel %= 3;
+  }
   const gl = viewport.getContext();
   const camera = viewport.getCamera();
   const batch = new PolygonBatch(gl);
@@ -51,14 +57,14 @@ export const createGameScreen = async (
   const groundData = mapData.layers.find(
     (w: any) => w.name === "Ground"
   ).objects;
-  const personTeam1Data = mapData.layers.find(
-    (p: any) => p.name === "Team1"
-  ).objects;
-  const personTeam2Data = mapData.layers.find(
-    (p: any) => p.name === "Team2"
-  ).objects;
+  // const personTeam1Data = mapData.layers.find(
+  //   (p: any) => p.name === "Team1"
+  // ).objects;
+  // const personTeam2Data = mapData.layers.find(
+  //   (p: any) => p.name === "Team2"
+  // ).objects;
 
-  const ball1 = mapData.layers.find((b: any) => b.name === "ball1").objects;
+  // const ball1 = mapData.layers.find((b: any) => b.name === "ball1").objects;
 
   let grounds: b2Body[] = [];
   let Team1: b2Body[] = [];
@@ -77,63 +83,13 @@ export const createGameScreen = async (
       )
     );
   }
-  for (let person1 of personTeam1Data) {
-    Team1.push(
-      createPerson(
-        physicWorld,
-        person1.x / Constants.METER_TO_PHYSIC_WORLD,
-        (MAP_HEIGHT - person1.y) / Constants.METER_TO_PHYSIC_WORLD,
-        person1.width / Constants.METER_TO_PHYSIC_WORLD,
-        person1.height / Constants.METER_TO_PHYSIC_WORLD,
-        { name: "Person1" },
-        Constants.PERSONTEAM1_CATEGORY_BIT,
-        Constants.PERSONTEAM1_MASK_BIT
-      )
-    );
-  }
-
-  for (let i = Team1.length - 1; i >= 0; i--) {
-    Team1[i].SetActive(false);
-  }
-
-  for (let i = 0; i < Team1.length; i++) {
-    ballsTeam1.push(
-      createBall(
-        physicWorld,
-        Team1[i].GetPosition().x + 0.2,
-        Team1[i].GetPosition().y + 0.2,
-        0.15,
-        Constants.BALLTEAM1_CATEGORY_BIT,
-        Constants.BALLTEAM1_MASK_BIT
-      )
-    );
-  }
-
-  for (let person2 of personTeam2Data) {
-    Team2.push(
-      createPerson(
-        physicWorld,
-        person2.x / Constants.METER_TO_PHYSIC_WORLD,
-        (MAP_HEIGHT - person2.y) / Constants.METER_TO_PHYSIC_WORLD,
-        person2.width / Constants.METER_TO_PHYSIC_WORLD,
-        person2.height / Constants.METER_TO_PHYSIC_WORLD,
-        { name: "Person2" },
-        Constants.PERSONTEAM2_CATEGORY_BIT,
-        Constants.PERSONTEAM2_MASK_BIT
-      )
-    );
-  }
-  const inputHandle = new ViewportInputHandler(viewport);
+  let inputHandle = new ViewportInputHandler(viewport);
   const contactListener = new b2ContactListener();
 
-  const originPosition = new Vector2(
-    ballsTeam1[1].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
-    ballsTeam1[1].GetPosition().y * Constants.METER_TO_PHYSIC_WORLD
-  );
-  let dragPositioning = new Vector2(
-    ballsTeam1[1].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
-    ballsTeam1[1].GetPosition().y * Constants.METER_TO_PHYSIC_WORLD
-  );
+  let touchTemp = new Vector2(0, 0);
+  let originPosition = new Vector2(0, 0);
+  let dragPositioning = new Vector2(0, 0);
+
   world.register("gl", gl);
   world.register("viewport", viewport);
   world.register("batch", batch);
@@ -148,17 +104,50 @@ export const createGameScreen = async (
   world.register("Team2", Team2);
   world.register("ballsTeam1", ballsTeam1);
   world.register("ballsTeam2", ballsTeam2);
-  world.register("originPosition", originPosition);
-  world.register("dragPositioning", dragPositioning);
+
   world.register("StateGame", stateGame);
   world.register("contactListener", contactListener);
 
   world.addSystem(new PhysicDebugSystem(), true);
-  world.addSystem(new TurnOfTeam(), true);
   world.addSystem(new ContactListenerSystem(), true);
   world.addSystem(new RenderSystem(), false);
-  world.addSystem(new InputHandlerSystem(), true);
-  world.addSystem(new NextLevelSystem(), true);
+
+  inputHandle.addEventListener(InputEvent.TouchStart, () => {
+    touchTemp.setVector(inputHandle.getTouchedWorldCoord());
+    if (Team1.length < 8 && stateGame.setupTeam1 === false) {
+      Team1.push(
+        createPerson(
+          physicWorld,
+          touchTemp.x / Constants.METER_TO_PHYSIC_WORLD - 0.5,
+          touchTemp.y / Constants.METER_TO_PHYSIC_WORLD - 0.5,
+          Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+          Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+          { name: "Person" },
+          Constants.PERSONTEAM1_CATEGORY_BIT,
+          Constants.PERSONTEAM1_MASK_BIT
+        )
+      );
+    }
+    if (
+      Team2.length < 8 &&
+      stateGame.setupTeam1 === true &&
+      stateGame.setupTeam2 === false &&
+      touchTemp.getX() > Constants.WORLD_WIDTH / 2
+    ) {
+      Team2.push(
+        createPerson(
+          physicWorld,
+          touchTemp.x / Constants.METER_TO_PHYSIC_WORLD - 0.5,
+          touchTemp.y / Constants.METER_TO_PHYSIC_WORLD - 0.5,
+          Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+          Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+          { name: "Person" },
+          Constants.PERSONTEAM1_CATEGORY_BIT,
+          Constants.PERSONTEAM1_MASK_BIT
+        )
+      );
+    }
+  });
 
   return {
     update(delta: number) {
@@ -170,6 +159,46 @@ export const createGameScreen = async (
       world.processPassiveSystem();
       physicWorld.Step(delta, 8, 3);
       stateGame.CooldownTime -= delta;
+
+      if (Team1.length === 8 && !stateGame.setupTeam1) {
+        stateGame.setupTeam1 = true;
+      }
+      if (Team2.length === 8 && !stateGame.setupTeam2) {
+        stateGame.setupTeam2 = true;
+        for (let i = Team1.length - 1; i >= 0; i--) {
+          setTimeout(() => {
+            Team1[i].SetActive(false);
+          }, 1000);
+        }
+        setTimeout(() => {
+          for (let i = 0; i < Team1.length; i++) {
+            ballsTeam1.push(
+              createBall(
+                physicWorld,
+                Team1[i].GetPosition().x + 0.2,
+                Team1[i].GetPosition().y + 0.2,
+                0.15,
+                Constants.BALLTEAM1_CATEGORY_BIT,
+                Constants.BALLTEAM1_MASK_BIT
+              )
+            );
+          }
+          originPosition = new Vector2(
+            ballsTeam1[0].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
+            ballsTeam1[0].GetPosition().y * Constants.METER_TO_PHYSIC_WORLD
+          );
+
+          dragPositioning = new Vector2(
+            ballsTeam1[0].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
+            ballsTeam1[0].GetPosition().y * Constants.METER_TO_PHYSIC_WORLD
+          );
+          world.register("originPosition", originPosition);
+          world.register("dragPositioning", dragPositioning);
+          world.addSystem(new InputHandlerSystem(), true);
+          world.addSystem(new TurnOfTeam(), true);
+          world.addSystem(new NextLevelSystem(), true);
+        }, 1500);
+      }
     },
     dispose(): void {},
   };

@@ -24,11 +24,13 @@ export class RenderSystem extends System {
   bloodBar: any;
   vsAsset: any;
   winningAsset: any;
+  pointTurn: any;
 
   initialized() {
     this.bloodBar = this.assetManager.getTexture("bloodBar") as Texture;
     this.vsAsset = this.assetManager.getTexture("vsAsset") as Texture;
     this.winningAsset = this.assetManager.getTexture("winningAsset") as Texture;
+    this.pointTurn = this.assetManager.getTexture("paint") as Texture;
   }
 
   process(): void {
@@ -50,11 +52,22 @@ export class RenderSystem extends System {
     this.batch.draw(this.bloodBar, 1500, 1200, 100 * this.Team2.length, 100);
     this.batch.draw(this.vsAsset, 1400, 1200, 100, 100, 50, 50);
 
-    if (this.Team1.length === 0) {
+    if (this.StateGame.setupTeam1 === false) {
+      this.batch.draw(this.pointTurn, 1000, 1000, 300, 150);
+    }
+
+    if (
+      this.StateGame.setupTeam1 === true &&
+      this.StateGame.setupTeam2 === false
+    ) {
+      this.batch.draw(this.pointTurn, 1700, 1000, 300, 150);
+    }
+
+    if (this.Team1.length === 0 && this.StateGame.setupTeam1) {
       this.batch.draw(this.winningAsset, 1750, 300, 1000, 1000);
     }
-    if (this.Team2.length === 0) {
-      this.batch.draw(this.winningAsset, 1750, 300, 1000, 1000);
+    if (this.Team2.length === 0 && this.StateGame.setupTeam2) {
+      this.batch.draw(this.winningAsset, 350, 300, 1000, 1000);
     }
     this.batch.end();
   }

@@ -14,7 +14,6 @@ export class ContactListenerSystem extends System {
       const fixtureAData = contact.GetFixtureA().GetBody().GetUserData();
       if (fixtureAData.name && fixtureAData.name.startsWith("Person")) {
         fixtureAData.durability += 1;
-        console.log("dcm");
       }
     };
     setTimeout(() => {

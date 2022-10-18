@@ -30,9 +30,6 @@ export class TurnOfTeam extends System {
   }
 
   process(): void {
-    if (this.Team1.length === 0 || this.Team2.length === 0) {
-      this.StateGame.conditionWin = true;
-    }
     if (
       this.StateGame.CooldownTime < 0 &&
       this.StateGame.changeTurn &&
@@ -64,11 +61,14 @@ export class TurnOfTeam extends System {
             );
           }
           this.StateGame.changeTurn = false;
-          this.originPosition.set(
-            this.ballsTeam2[0].GetPosition().x *
-              Constants.METER_TO_PHYSIC_WORLD,
-            this.ballsTeam2[0].GetPosition().y * Constants.METER_TO_PHYSIC_WORLD
-          );
+          if (this.StateGame.conditionWin === false) {
+            this.originPosition.set(
+              this.ballsTeam2[0].GetPosition().x *
+                Constants.METER_TO_PHYSIC_WORLD,
+              this.ballsTeam2[0].GetPosition().y *
+                Constants.METER_TO_PHYSIC_WORLD
+            );
+          }
           break;
         case 2:
           for (let i = this.ballsTeam2.length - 1; i >= 0; i--) {
@@ -97,11 +97,15 @@ export class TurnOfTeam extends System {
           }
 
           this.StateGame.changeTurn = false;
-          this.originPosition.set(
-            this.ballsTeam1[0].GetPosition().x *
-              Constants.METER_TO_PHYSIC_WORLD,
-            this.ballsTeam1[0].GetPosition().y * Constants.METER_TO_PHYSIC_WORLD
-          );
+          if (this.StateGame.conditionWin === false) {
+            this.originPosition.set(
+              this.ballsTeam1[0].GetPosition().x *
+                Constants.METER_TO_PHYSIC_WORLD,
+              this.ballsTeam1[0].GetPosition().y *
+                Constants.METER_TO_PHYSIC_WORLD
+            );
+          }
+
           break;
         default:
           break;

@@ -22,6 +22,7 @@ export const init = async () => {
   await assetManager.loadTexture("./bloodBar.png", "bloodBar");
   await assetManager.loadTexture("./vsAsset.png", "vsAsset");
   await assetManager.loadTexture("./winningAsset.png", "winningAsset");
+  await assetManager.loadTexture("./tempAsset.png", "paint");
 
   Game.shared.setScreen(await createGameScreen(assetManager, viewport));
 

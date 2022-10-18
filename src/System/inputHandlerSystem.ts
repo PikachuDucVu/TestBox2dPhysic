@@ -91,6 +91,9 @@ export class InputHandlerSystem extends System {
           this.dragPositioning
         );
         if (this.StateGame.WhoisTurning === 1 && this.hasFired === false) {
+          this.StateGame.CooldownTime = 6;
+          this.dragging = false;
+          this.hasFired = true;
           for (let ball of this.ballsTeam1) {
             ball.SetType(b2BodyType.b2_dynamicBody);
             ball.ApplyLinearImpulseToCenter(impulse);
@@ -101,13 +104,14 @@ export class InputHandlerSystem extends System {
             ball.SetType(b2BodyType.b2_dynamicBody);
             ball.ApplyLinearImpulseToCenter(impulse);
           }
+          this.dragging = false;
+          this.hasFired = true;
+          this.StateGame.CooldownTime = 6;
         }
-        this.hasFired = true;
-        this.StateGame.CooldownTime = 6;
+
         setTimeout(() => {
           this.StateGame.changeTurn = true;
         }, 6000);
-        this.dragging = false;
       }
     }
     this.shapeRenderer.begin();

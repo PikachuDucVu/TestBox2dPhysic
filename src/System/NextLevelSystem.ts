@@ -15,18 +15,21 @@ export class NextLevelSystem extends System {
   process(): void {
     if (
       (this.Team1.length === 0 || this.Team2.length === 0) &&
-      this.StateGame.CooldownTime < 0
+      this.StateGame.CooldownTime < 0 &&
+      this.StateGame.setupTeam2 === true
     ) {
       this.StateGame.conditionWin = true;
       this.StateGame.currentLevel++;
       this.StateGame.CooldownTime = 999;
       this.StateGame.WhoisTurning = 1;
-      this.StateGame.changeTurn = false;
 
       setTimeout(() => {
         const screen = createGameScreen(this.assetManager, this.viewport);
         screen.then((screen) => {
           this.StateGame.conditionWin = false;
+          this.StateGame.changeTurn = false;
+          this.StateGame.setupTeam1 = false;
+          this.StateGame.setupTeam2 = false;
           Game.shared.setScreen(screen);
         });
       }, 5000);
