@@ -61,7 +61,10 @@ export class TurnOfTeam extends System {
             );
           }
           this.StateGame.changeTurn = false;
-          if (this.StateGame.conditionWin === false) {
+          if (
+            this.StateGame.conditionWin === false &&
+            this.Team2.length !== 0
+          ) {
             this.originPosition.set(
               this.ballsTeam2[0].GetPosition().x *
                 Constants.METER_TO_PHYSIC_WORLD,
@@ -97,7 +100,10 @@ export class TurnOfTeam extends System {
           }
 
           this.StateGame.changeTurn = false;
-          if (this.StateGame.conditionWin === false) {
+          if (
+            this.StateGame.conditionWin === false &&
+            this.Team1.length !== 0
+          ) {
             this.originPosition.set(
               this.ballsTeam1[0].GetPosition().x *
                 Constants.METER_TO_PHYSIC_WORLD,
