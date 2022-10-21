@@ -1,5 +1,6 @@
 import { b2Body, b2Contact, b2ContactListener, b2World } from "box2d.ts";
 import { System, Inject } from "flat-ecs";
+import { getTextOfJSDocComment } from "typescript";
 import { StateGame } from "../dataGame/stateGame";
 
 export class ContactListenerSystem extends System {
@@ -7,6 +8,7 @@ export class ContactListenerSystem extends System {
   @Inject("physicWorld") physicWorld: b2World;
   @Inject("Team1") Team1: b2Body[];
   @Inject("Team2") Team2: b2Body[];
+  @Inject("ballsTeam1") ballsTeam1: b2Body[];
   @Inject("StateGame") StateGame: StateGame;
 
   initialized() {

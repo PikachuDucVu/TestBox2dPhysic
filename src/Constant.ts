@@ -4,6 +4,8 @@ export class Constants {
   public static readonly METER_TO_PHYSIC_WORLD = 100;
   public static readonly PERSON_HEIGHT = 150;
   public static readonly PERSON_WIDTH = 75;
+  public static readonly ARRAY_HEIGHT = 75;
+  public static readonly ARRAY_WIDTH = 25;
 
   public static readonly GROUND_CATEGORY_BIT = 1 << 0;
   public static readonly PERSONTEAM1_CATEGORY_BIT = 1 << 1;

@@ -18,7 +18,12 @@ import { ContactListenerSystem } from "../System/ContactListener";
 import { InputHandlerSystem } from "../System/inputHandlerSystem";
 import { NextLevelSystem } from "../System/NextLevelSystem";
 import { TurnOfTeam } from "../System/TurnOfTeam";
-import { createBall, createGround, createPerson } from "../System/utils";
+import {
+  createArray,
+  createBall,
+  createGround,
+  createPerson,
+} from "../System/utils";
 
 const stateGame: StateGame = {
   currentLevel: 1,
@@ -310,11 +315,13 @@ export const createGameScreen = async (
         setTimeout(() => {
           for (let i = 0; i < Team1.length; i++) {
             ballsTeam1.push(
-              createBall(
+              createArray(
                 physicWorld,
                 Team1[i].GetPosition().x + 0.2,
                 Team1[i].GetPosition().y + 0.2,
-                0.15,
+                Constants.ARRAY_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+                Constants.ARRAY_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+                -15,
                 Constants.BALLTEAM1_CATEGORY_BIT,
                 Constants.BALLTEAM1_MASK_BIT
               )

@@ -3,7 +3,7 @@ import { System, Inject } from "flat-ecs";
 import { Vector2 } from "gdxts";
 import { Constants } from "../Constant";
 import { StateGame } from "../dataGame/stateGame";
-import { createBall } from "./utils";
+import { createArray, createBall } from "./utils";
 
 export class TurnOfTeam extends System {
   @Inject("StateGame") StateGame: StateGame;
@@ -50,11 +50,13 @@ export class TurnOfTeam extends System {
           }
           for (let i = 0; i < this.Team2.length; i++) {
             this.ballsTeam2.push(
-              createBall(
+              createArray(
                 this.physicWorld,
                 this.Team2[i].GetPosition().x + 0.2,
-                this.Team2[i].GetPosition().y + 0.1,
-                0.15,
+                this.Team2[i].GetPosition().y + 0.2,
+                Constants.ARRAY_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+                Constants.ARRAY_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+                15,
                 Constants.BALLTEAM2_CATEGORY_BIT,
                 Constants.BALLTEAM2_MASK_BIT
               )
@@ -88,17 +90,18 @@ export class TurnOfTeam extends System {
           }
           for (let i = 0; i < this.Team1.length; i++) {
             this.ballsTeam1.push(
-              createBall(
+              createArray(
                 this.physicWorld,
                 this.Team1[i].GetPosition().x + 0.2,
-                this.Team1[i].GetPosition().y + 0.1,
-                0.15,
+                this.Team1[i].GetPosition().y + 0.2,
+                Constants.ARRAY_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+                Constants.ARRAY_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+                0,
                 Constants.BALLTEAM1_CATEGORY_BIT,
                 Constants.BALLTEAM1_MASK_BIT
               )
             );
           }
-
           this.StateGame.changeTurn = false;
           if (
             this.StateGame.conditionWin === false &&
@@ -111,7 +114,6 @@ export class TurnOfTeam extends System {
                 Constants.METER_TO_PHYSIC_WORLD
             );
           }
-
           break;
         default:
           break;

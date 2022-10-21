@@ -78,3 +78,38 @@ export const createPerson = (
   body.CreateFixture(shape);
   return body;
 };
+
+export const createArray = (
+  physicWorld: b2World,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  angle: number,
+  categoryBits: number,
+  maskBits: number
+): b2Body => {
+  const bodyDef = new b2BodyDef();
+  bodyDef.type = b2BodyType.b2_staticBody;
+  bodyDef.position.Set(x, y);
+  const body = physicWorld.CreateBody(bodyDef);
+  const shape = new b2PolygonShape();
+
+  shape.SetAsBox(width / 2, height / 2, {
+    x: width / 4 - 0.1,
+    y: height / 4 - 0.2,
+  });
+  body.SetUserData({
+    name: "Array",
+  });
+  body.SetAngle(angle);
+
+  const fixtureDef = new b2FixtureDef();
+  fixtureDef.shape = shape;
+  fixtureDef.filter.categoryBits = categoryBits;
+  fixtureDef.filter.maskBits = maskBits;
+
+  body.CreateFixture(fixtureDef);
+
+  return body;
+};

@@ -1,5 +1,6 @@
 import { b2Body, b2BodyType } from "box2d.ts";
 import { Inject, System } from "flat-ecs";
+import { stat } from "fs";
 import {
   Color,
   InputEvent,
@@ -70,6 +71,7 @@ export class InputHandlerSystem extends System {
 
   hasFired = false;
   dragging = false;
+  angle = 0;
 
   initialized() {
     this.inputHandle.addEventListener(InputEvent.TouchStart, () => {});
@@ -78,6 +80,24 @@ export class InputHandlerSystem extends System {
   process(): void {
     if (this.StateGame.CooldownTime < 0) {
       this.hasFired = false;
+    }
+    if (this.hasFired) {
+      if (this.StateGame.WhoisTurning === 1) {
+        for (let i = 0; i < this.ballsTeam1.length; i++) {
+          this.angle = this.ballsTeam1[i].GetAngle();
+          if (this.angle > -135) {
+            this.ballsTeam1[i].SetAngle((this.angle -= 0.65));
+          }
+        }
+      }
+      if (this.StateGame.WhoisTurning === 2) {
+        for (let i = 0; i < this.ballsTeam2.length; i++) {
+          this.angle = this.ballsTeam2[i].GetAngle();
+          if (this.angle < 135) {
+            this.ballsTeam2[i].SetAngle((this.angle += 0.65));
+          }
+        }
+      }
     }
     this.dragPositioning = this.inputHandle.getTouchedWorldCoord();
     if (this.inputHandle.isTouched() && this.StateGame.conditionWin === false) {
