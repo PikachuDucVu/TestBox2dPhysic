@@ -64,7 +64,7 @@ export const createGameScreen = async (
   //   (p: any) => p.name === "Team2"
   // ).objects;
 
-  // const ball1 = mapData.layers.find((b: any) => b.name === "ball1").objects;
+  // const ball1 = mapData.layex    rs.find((b: any) => b.name === "ball1").objects;
 
   let grounds: b2Body[] = [];
   let Team1: b2Body[] = [];
@@ -111,43 +111,180 @@ export const createGameScreen = async (
   world.addSystem(new PhysicDebugSystem(), true);
   world.addSystem(new ContactListenerSystem(), true);
   world.addSystem(new RenderSystem(), false);
+  let tempX1 = 1;
+  let tempY1 = 3.5;
+  let tempX2 = 27.25;
+  let tempY2 = 10;
 
-  inputHandle.addEventListener(InputEvent.TouchStart, () => {
-    touchTemp.setVector(inputHandle.getTouchedWorldCoord());
-    if (Team1.length < 8 && stateGame.setupTeam1 === false) {
-      Team1.push(
-        createPerson(
-          physicWorld,
-          touchTemp.x / Constants.METER_TO_PHYSIC_WORLD - 0.5,
-          touchTemp.y / Constants.METER_TO_PHYSIC_WORLD - 0.5,
-          Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
-          Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
-          { name: "Person" },
-          Constants.PERSONTEAM1_CATEGORY_BIT,
-          Constants.PERSONTEAM1_MASK_BIT
-        )
-      );
-    }
-    if (
-      Team2.length < 8 &&
-      stateGame.setupTeam1 === true &&
-      stateGame.setupTeam2 === false &&
-      touchTemp.getX() > Constants.WORLD_WIDTH / 2
-    ) {
-      Team2.push(
-        createPerson(
-          physicWorld,
-          touchTemp.x / Constants.METER_TO_PHYSIC_WORLD - 0.5,
-          touchTemp.y / Constants.METER_TO_PHYSIC_WORLD - 0.5,
-          Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
-          Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
-          { name: "Person" },
-          Constants.PERSONTEAM1_CATEGORY_BIT,
-          Constants.PERSONTEAM1_MASK_BIT
-        )
-      );
-    }
-  });
+  // Team1.push(
+  //   createPerson(
+  //     physicWorld,
+  //     tempX1,
+  //     tempY1,
+  //     Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+  //     Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+  //     { name: "Person" },
+  //     Constants.PERSONTEAM1_CATEGORY_BIT,
+  //     Constants.PERSONTEAM1_MASK_BIT
+  //   )
+  // );
+  switch (stateGame.currentLevel) {
+    case 1:
+      for (let i = 0; i < 4; i++) {
+        tempX1++;
+        tempY1 = 3.5;
+        for (let j = 0; j < 2; j++) {
+          Team1.push(
+            createPerson(
+              physicWorld,
+              tempX1,
+              tempY1++,
+              Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+              Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+              { name: "Person" },
+              Constants.PERSONTEAM1_CATEGORY_BIT,
+              Constants.PERSONTEAM1_MASK_BIT
+            )
+          );
+        }
+        tempX2--;
+        tempY2 = 5;
+        for (let j = 0; j < 2; j++) {
+          Team2.push(
+            createPerson(
+              physicWorld,
+              tempX2,
+              tempY2--,
+              Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+              Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+              { name: "Person" },
+              Constants.PERSONTEAM1_CATEGORY_BIT,
+              Constants.PERSONTEAM1_MASK_BIT
+            )
+          );
+        }
+      }
+      break;
+    case 2:
+      tempX1 = 2.25;
+      tempY1 = 3.5;
+      tempX2 = 26.5;
+
+      for (let i = 0; i < 4; i++) {
+        tempX1++;
+        tempY1 = 3.5;
+        for (let j = 0; j < 2; j++) {
+          Team1.push(
+            createPerson(
+              physicWorld,
+              tempX1,
+              tempY1++,
+              Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+              Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+              { name: "Person" },
+              Constants.PERSONTEAM1_CATEGORY_BIT,
+              Constants.PERSONTEAM1_MASK_BIT
+            )
+          );
+        }
+        tempX2--;
+        tempY2 = 5;
+        for (let j = 0; j < 2; j++) {
+          Team2.push(
+            createPerson(
+              physicWorld,
+              tempX2,
+              tempY2--,
+              Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+              Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+              { name: "Person" },
+              Constants.PERSONTEAM1_CATEGORY_BIT,
+              Constants.PERSONTEAM1_MASK_BIT
+            )
+          );
+        }
+      }
+      break;
+    case 3:
+      tempX1 = 2.25;
+      tempY1 = 3.5;
+      tempX2 = 26.5;
+
+      for (let i = 0; i < 4; i++) {
+        tempX1++;
+        tempY1 = 3.5;
+        for (let j = 0; j < 2; j++) {
+          Team1.push(
+            createPerson(
+              physicWorld,
+              tempX1,
+              tempY1++,
+              Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+              Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+              { name: "Person" },
+              Constants.PERSONTEAM1_CATEGORY_BIT,
+              Constants.PERSONTEAM1_MASK_BIT
+            )
+          );
+        }
+        tempX2--;
+        tempY2 = 5;
+        for (let j = 0; j < 2; j++) {
+          Team2.push(
+            createPerson(
+              physicWorld,
+              tempX2,
+              tempY2--,
+              Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+              Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+              { name: "Person" },
+              Constants.PERSONTEAM1_CATEGORY_BIT,
+              Constants.PERSONTEAM1_MASK_BIT
+            )
+          );
+        }
+      }
+      break;
+    default:
+      break;
+  }
+
+  // inputHandle.addEventListener(InputEvent.TouchStart, () => {
+  //   touchTemp.setVector(inputHandle.getTouchedWorldCoord());
+  //   if (Team1.length < 8 && stateGame.setupTeam1 === false) {
+  //     Team1.push(
+  //       createPerson(
+  //         physicWorld,
+  //         touchTemp.x / Constants.METER_TO_PHYSIC_WORLD - 0.5,
+  //         touchTemp.y / Constants.METER_TO_PHYSIC_WORLD - 0.5,
+  //         Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+  //         Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+  //         { name: "Person" },
+  //         Constants.PERSONTEAM1_CATEGORY_BIT,
+  //         Constants.PERSONTEAM1_MASK_BIT
+  //       )
+  //     );
+  //   }
+  // if (
+  //   Team2.length < 8 &&
+  //   stateGame.setupTeam1 === true &&
+  //   stateGame.setupTeam2 === false &&
+  //   touchTemp.getX() > Constants.WORLD_WIDTH / 2
+  // ) {
+  //   Team2.push(
+  //     createPerson(
+  //       physicWorld,
+  //       touchTemp.x / Constants.METER_TO_PHYSIC_WORLD - 0.5,
+  //       touchTemp.y / Constants.METER_TO_PHYSIC_WORLD - 0.5,
+  //       Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
+  //       Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
+  //       { name: "Person" },
+  //       Constants.PERSONTEAM1_CATEGORY_BIT,
+  //       Constants.PERSONTEAM1_MASK_BIT
+  //     )
+  //   );
+  // }
+  // });
 
   return {
     update(delta: number) {
