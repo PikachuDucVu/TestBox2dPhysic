@@ -78,14 +78,14 @@
                 }, 
                 {
                  "class":"",
-                 "height":684.848484848485,
+                 "height":495.890141574161,
                  "id":85,
                  "name":"",
                  "rotation":0,
                  "visible":true,
                  "width":103.030303030303,
                  "x":1396.9696969697,
-                 "y":212.121212121212
+                 "y":401.079555395536
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -509,7 +509,7 @@
  "nextobjectid":111,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.9.0",
+ "tiledversion":"1.9.2",
  "tileheight":100,
  "tilesets":[],
  "tilewidth":100,
