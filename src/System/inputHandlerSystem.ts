@@ -1,6 +1,5 @@
 import { b2Body, b2BodyType } from "box2d.ts";
 import { Inject, System } from "flat-ecs";
-import { stat } from "fs";
 import {
   Color,
   InputEvent,
@@ -20,9 +19,9 @@ const tmpP = new Vector2(0, 0);
 const tmpG = new Vector2(0, 0);
 const GRAVITY = -10;
 
-// function getRandomInt(min: number, max: number) {
-//   return Math.floor(Math.random() * (max - min)) + min;
-// }
+function getRandomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 const getTrajectoryPoint = (
   startPos: Vector2,
   startV: Vector2,
@@ -72,68 +71,106 @@ export class InputHandlerSystem extends System {
   hasFired = false;
   dragging = false;
   angle = 0;
+  temp: any;
 
   initialized() {
     this.inputHandle.addEventListener(InputEvent.TouchStart, () => {});
   }
 
   process(): void {
-    if (this.StateGame.CooldownTime < 0) {
-      this.hasFired = false;
+    if (this.StateGame.WhoisTurning === 1) {
+      this.dragPositioning = this.inputHandle.getTouchedWorldCoord();
     }
-    if (this.hasFired) {
-      if (this.StateGame.WhoisTurning === 1) {
-        for (let i = 0; i < this.ballsTeam1.length; i++) {
-          this.angle = this.ballsTeam1[i].GetAngle();
-          if (this.angle > -135) {
-            this.ballsTeam1[i].SetAngle((this.angle -= 0.65));
-          }
-        }
-      }
-      if (this.StateGame.WhoisTurning === 2) {
-        for (let i = 0; i < this.ballsTeam2.length; i++) {
-          this.angle = this.ballsTeam2[i].GetAngle();
-          if (this.angle < 135) {
-            this.ballsTeam2[i].SetAngle((this.angle += 0.65));
-          }
-        }
-      }
-    }
-    this.dragPositioning = this.inputHandle.getTouchedWorldCoord();
+    console.log(this.StateGame.CooldownTime);
     if (this.inputHandle.isTouched() && this.StateGame.conditionWin === false) {
       if (!this.dragging) {
-        this.dragging = true;
+        if (this.StateGame.CooldownTime < 0) {
+          this.dragging = true;
+        }
       }
     } else {
-      if (this.dragging && this.hasFired === false) {
+      if (
+        this.dragging &&
+        this.hasFired === false &&
+        this.StateGame.WhoisTurning === 1
+      ) {
         const impulse = calculateImpulse(
           this.originPosition,
           this.dragPositioning
         );
-        if (this.StateGame.WhoisTurning === 1 && this.hasFired === false) {
+        if (
+          this.StateGame.WhoisTurning === 1 &&
+          this.hasFired === false &&
+          this.StateGame.conditionWin === false
+        ) {
           this.StateGame.CooldownTime = 6;
           this.dragging = false;
           this.hasFired = true;
-          for (let ball of this.ballsTeam1) {
-            ball.SetType(b2BodyType.b2_dynamicBody);
-            ball.ApplyLinearImpulseToCenter(impulse);
-          }
         }
-        if (this.StateGame.WhoisTurning === 2 && this.hasFired === false) {
-          for (let ball of this.ballsTeam2) {
-            ball.SetType(b2BodyType.b2_dynamicBody);
-            ball.ApplyLinearImpulseToCenter(impulse);
-          }
-          this.dragging = false;
-          this.hasFired = true;
-          this.StateGame.CooldownTime = 6;
+        for (let ball of this.ballsTeam1) {
+          ball.SetType(b2BodyType.b2_dynamicBody);
+          ball.ApplyLinearImpulseToCenter(impulse);
         }
+        this.dragging = false;
+        this.hasFired = true;
+        this.StateGame.CooldownTime = 6;
 
         setTimeout(() => {
           this.StateGame.changeTurn = true;
+          this.hasFired = false;
         }, 6000);
       }
     }
+    // BOT
+    if (
+      this.StateGame.WhoisTurning === 2 &&
+      this.hasFired === false &&
+      this.StateGame.conditionWin === false
+    ) {
+      this.dragging = true;
+      if (this.StateGame.delayTime >= 0.5) {
+        this.StateGame.delayTime = 0;
+        this.dragPositioning.set(
+          getRandomInt(
+            this.ballsTeam2[0].GetPosition().x *
+              Constants.METER_TO_PHYSIC_WORLD +
+              10,
+            this.ballsTeam2[0].GetPosition().x *
+              Constants.METER_TO_PHYSIC_WORLD +
+              200
+          ),
+          getRandomInt(
+            this.ballsTeam2[0].GetPosition().y *
+              Constants.METER_TO_PHYSIC_WORLD -
+              20,
+            this.ballsTeam2[0].GetPosition().y *
+              Constants.METER_TO_PHYSIC_WORLD -
+              100
+          )
+        );
+      }
+      const impulse = calculateImpulse(
+        this.originPosition,
+        this.dragPositioning
+      );
+      if (this.StateGame.botDelayTime >= 5) {
+        for (let ball of this.ballsTeam2) {
+          ball.SetType(b2BodyType.b2_dynamicBody);
+          ball.ApplyLinearImpulseToCenter(impulse);
+        }
+        this.StateGame.botDelayTime = -999;
+        this.StateGame.CooldownTime = 6;
+        this.hasFired = true;
+        this.dragging = false;
+        setTimeout(() => {
+          this.StateGame.changeTurn = true;
+          setTimeout(() => {
+            this.hasFired = false;
+          }, 50);
+        }, 6000);
+      }
+    }
+
     this.shapeRenderer.begin();
 
     if (this.dragging && this.hasFired === false) {

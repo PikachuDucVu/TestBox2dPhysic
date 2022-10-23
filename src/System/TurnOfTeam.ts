@@ -3,7 +3,7 @@ import { System, Inject } from "flat-ecs";
 import { Vector2 } from "gdxts";
 import { Constants } from "../Constant";
 import { StateGame } from "../dataGame/stateGame";
-import { createArray, createBall } from "./utils";
+import { createBall } from "./utils";
 
 export class TurnOfTeam extends System {
   @Inject("StateGame") StateGame: StateGame;
@@ -11,7 +11,6 @@ export class TurnOfTeam extends System {
   @Inject("ballsTeam2") ballsTeam2: b2Body[];
   @Inject("Team1") Team1: b2Body[];
   @Inject("Team2") Team2: b2Body[];
-
   @Inject("physicWorld") physicWorld: b2World;
   @Inject("originPosition") originPosition: Vector2;
   @Inject("mapData") mapData: any;
@@ -30,6 +29,9 @@ export class TurnOfTeam extends System {
   }
 
   process(): void {
+    // if (this.Team1.length === 0 || this.Team2.length === 0 ) {
+    //   this.StateGame.conditionWin = true;
+    // }
     if (
       this.StateGame.CooldownTime < 0 &&
       this.StateGame.changeTurn &&
@@ -50,23 +52,18 @@ export class TurnOfTeam extends System {
           }
           for (let i = 0; i < this.Team2.length; i++) {
             this.ballsTeam2.push(
-              createArray(
+              createBall(
                 this.physicWorld,
                 this.Team2[i].GetPosition().x + 0.2,
-                this.Team2[i].GetPosition().y + 0.2,
-                Constants.ARRAY_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
-                Constants.ARRAY_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
-                15,
+                this.Team2[i].GetPosition().y + 0.1,
+                0.15,
                 Constants.BALLTEAM2_CATEGORY_BIT,
                 Constants.BALLTEAM2_MASK_BIT
               )
             );
           }
           this.StateGame.changeTurn = false;
-          if (
-            this.StateGame.conditionWin === false &&
-            this.Team2.length !== 0
-          ) {
+          if (this.StateGame.conditionWin === false) {
             this.originPosition.set(
               this.ballsTeam2[0].GetPosition().x *
                 Constants.METER_TO_PHYSIC_WORLD,
@@ -84,36 +81,28 @@ export class TurnOfTeam extends System {
             this.Team2[i].SetActive(true);
           }
           for (let i = this.Team1.length - 1; i >= 0; i--) {
-            // this.Team1[i].SetType(b2BodyType.b2_staticBody);
             this.Team1[i].SetActive(false);
             this.StateGame.WhoisTurning = 1;
           }
           for (let i = 0; i < this.Team1.length; i++) {
             this.ballsTeam1.push(
-              createArray(
+              createBall(
                 this.physicWorld,
                 this.Team1[i].GetPosition().x + 0.2,
-                this.Team1[i].GetPosition().y + 0.2,
-                Constants.ARRAY_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
-                Constants.ARRAY_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
-                0,
+                this.Team1[i].GetPosition().y + 0.1,
+                0.15,
                 Constants.BALLTEAM1_CATEGORY_BIT,
                 Constants.BALLTEAM1_MASK_BIT
               )
             );
           }
+
           this.StateGame.changeTurn = false;
-          if (
-            this.StateGame.conditionWin === false &&
-            this.Team1.length !== 0
-          ) {
-            this.originPosition.set(
-              this.ballsTeam1[0].GetPosition().x *
-                Constants.METER_TO_PHYSIC_WORLD,
-              this.ballsTeam1[0].GetPosition().y *
-                Constants.METER_TO_PHYSIC_WORLD
-            );
-          }
+          this.originPosition.set(
+            this.ballsTeam1[0].GetPosition().x *
+              Constants.METER_TO_PHYSIC_WORLD,
+            this.ballsTeam1[0].GetPosition().y * Constants.METER_TO_PHYSIC_WORLD
+          );
           break;
         default:
           break;

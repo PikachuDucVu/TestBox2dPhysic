@@ -6,4 +6,6 @@ export interface StateGame {
   conditionWin: boolean;
   setupTeam1: boolean;
   setupTeam2: boolean;
+  botDelayTime: number;
+  delayTime: number;
 }
