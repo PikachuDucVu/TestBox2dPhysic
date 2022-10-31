@@ -3,6 +3,7 @@ import {
   b2BodyDef,
   b2BodyType,
   b2CircleShape,
+  b2DynamicTree,
   b2Filter,
   b2FixtureDef,
   b2PolygonShape,

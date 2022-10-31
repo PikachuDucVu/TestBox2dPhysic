@@ -42,33 +42,22 @@ export class RenderSystem extends System {
     this.batch.draw(
       this.bloodBar,
       1400,
-      1300,
-      100 * this.Team1.length,
-      100,
+      1250,
+      20 * this.Team1.length,
+      50,
       1,
       1,
       3.14
     );
-    this.batch.draw(this.bloodBar, 1500, 1200, 100 * this.Team2.length, 100);
-    this.batch.draw(this.vsAsset, 1400, 1200, 100, 100, 50, 50);
+    this.batch.draw(this.bloodBar, 1500, 1200, 20 * this.Team2.length, 50);
+    this.batch.draw(this.vsAsset, 1415, 1190, 75, 75, 50, 50);
 
-    if (this.StateGame.setupTeam1 === false) {
-      this.batch.draw(this.pointTurn, 1000, 1000, 300, 150);
-    }
-
-    if (
-      this.StateGame.setupTeam1 === true &&
-      this.StateGame.setupTeam2 === false
-    ) {
-      this.batch.draw(this.pointTurn, 1700, 1000, 300, 150);
-    }
-
-    if (this.Team1.length === 0 && this.StateGame.setupTeam1) {
-      this.batch.draw(this.winningAsset, 1750, 300, 1000, 1000);
-    }
-    if (this.Team2.length === 0 && this.StateGame.setupTeam2) {
-      this.batch.draw(this.winningAsset, 350, 300, 1000, 1000);
-    }
+    // if (this.Team1.length === 0 && this.StateGame.setupTeam1) {
+    //   this.batch.draw(this.winningAsset, 1750, 300, 1000, 1000);
+    // }
+    // if (this.Team2.length === 0 && this.StateGame.setupTeam2) {
+    //   this.batch.draw(this.winningAsset, 350, 300, 1000, 1000);
+    // }
     this.batch.end();
   }
 }

@@ -9,3 +9,8 @@ export interface StateGame {
   botDelayTime: number;
   delayTime: number;
 }
+export interface controlCameraGame {
+  introGame: boolean;
+  startCam1: boolean;
+  startCam2: boolean;
+}

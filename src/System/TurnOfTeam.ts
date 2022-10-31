@@ -56,7 +56,7 @@ export class TurnOfTeam extends System {
                 this.physicWorld,
                 this.Team2[i].GetPosition().x + 0.2,
                 this.Team2[i].GetPosition().y + 0.1,
-                0.15,
+                0.075,
                 Constants.BALLTEAM2_CATEGORY_BIT,
                 Constants.BALLTEAM2_MASK_BIT
               )
@@ -64,12 +64,25 @@ export class TurnOfTeam extends System {
           }
           this.StateGame.changeTurn = false;
           if (this.StateGame.conditionWin === false) {
-            this.originPosition.set(
-              this.ballsTeam2[0].GetPosition().x *
-                Constants.METER_TO_PHYSIC_WORLD,
-              this.ballsTeam2[0].GetPosition().y *
-                Constants.METER_TO_PHYSIC_WORLD
-            );
+            if (this.ballsTeam2.length >= 5) {
+              this.originPosition.set(
+                this.ballsTeam2[4].GetPosition().x *
+                  Constants.METER_TO_PHYSIC_WORLD +
+                  100,
+                this.ballsTeam2[4].GetPosition().y *
+                  Constants.METER_TO_PHYSIC_WORLD +
+                  100
+              );
+            } else {
+              this.originPosition.set(
+                this.ballsTeam2[this.ballsTeam2.length - 1].GetPosition().x *
+                  Constants.METER_TO_PHYSIC_WORLD +
+                  100,
+                this.ballsTeam2[this.ballsTeam2.length - 1].GetPosition().y *
+                  Constants.METER_TO_PHYSIC_WORLD +
+                  100
+              );
+            }
           }
           break;
         case 2:
@@ -90,7 +103,7 @@ export class TurnOfTeam extends System {
                 this.physicWorld,
                 this.Team1[i].GetPosition().x + 0.2,
                 this.Team1[i].GetPosition().y + 0.1,
-                0.15,
+                0.075,
                 Constants.BALLTEAM1_CATEGORY_BIT,
                 Constants.BALLTEAM1_MASK_BIT
               )
@@ -98,11 +111,30 @@ export class TurnOfTeam extends System {
           }
 
           this.StateGame.changeTurn = false;
-          this.originPosition.set(
-            this.ballsTeam1[0].GetPosition().x *
-              Constants.METER_TO_PHYSIC_WORLD,
-            this.ballsTeam1[0].GetPosition().y * Constants.METER_TO_PHYSIC_WORLD
-          );
+          if (this.ballsTeam1.length >= 5) {
+            this.originPosition.set(
+              this.ballsTeam1[4].GetPosition().x *
+                Constants.METER_TO_PHYSIC_WORLD +
+                100,
+              this.ballsTeam1[4].GetPosition().y *
+                Constants.METER_TO_PHYSIC_WORLD +
+                100
+            );
+          } else {
+            this.originPosition.set(
+              this.ballsTeam1[this.ballsTeam1.length - 1].GetPosition().x *
+                Constants.METER_TO_PHYSIC_WORLD +
+                100,
+              this.ballsTeam1[this.ballsTeam1.length - 1].GetPosition().y *
+                Constants.METER_TO_PHYSIC_WORLD +
+                100
+            );
+          }
+          // this.originPosition.set(
+          //   this.ballsTeam1[0].GetPosition().x *
+          //     Constants.METER_TO_PHYSIC_WORLD,
+          //   this.ballsTeam1[0].GetPosition().y * Constants.METER_TO_PHYSIC_WORLD
+          // );
           break;
         default:
           break;

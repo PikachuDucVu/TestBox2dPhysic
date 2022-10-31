@@ -1,3 +1,4 @@
+import { b2_pi } from "box2d.ts";
 import {
   AssetManager,
   createGameLoop,

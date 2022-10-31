@@ -8,11 +8,12 @@ import {
   Vector2,
   ViewportInputHandler,
 } from "gdxts";
+import { getTextOfJSDocComment } from "typescript";
 import { Constants } from "../Constant";
 import { StateGame } from "../dataGame/stateGame";
 
-const MAX_IMPULSE_POWER = 20;
-const MAX_DRAGGING_RANGE = 1;
+const MAX_IMPULSE_POWER = 17;
+const MAX_DRAGGING_RANGE = 2;
 
 const tmpV = new Vector2(0, 0);
 const tmpP = new Vector2(0, 0);
@@ -38,6 +39,8 @@ const getTrajectoryPoint = (
 };
 const tmpV2 = new Vector2(0, 0);
 const trajectories: number[] = [];
+let tempTrajectories: number[] = [];
+
 const calculateImpulse = (
   originPosition: Vector2,
   dragPositioning: Vector2
@@ -81,7 +84,6 @@ export class InputHandlerSystem extends System {
     if (this.StateGame.WhoisTurning === 1) {
       this.dragPositioning = this.inputHandle.getTouchedWorldCoord();
     }
-    console.log(this.StateGame.CooldownTime);
     if (this.inputHandle.isTouched() && this.StateGame.conditionWin === false) {
       if (!this.dragging) {
         if (this.StateGame.CooldownTime < 0) {
@@ -107,9 +109,9 @@ export class InputHandlerSystem extends System {
           this.dragging = false;
           this.hasFired = true;
         }
-        for (let ball of this.ballsTeam1) {
-          ball.SetType(b2BodyType.b2_dynamicBody);
-          ball.ApplyLinearImpulseToCenter(impulse);
+        for (let i = 0; i < this.ballsTeam1.length; i++) {
+          this.ballsTeam1[i].SetType(b2BodyType.b2_dynamicBody);
+          this.ballsTeam1[i].SetLinearVelocity(impulse);
         }
         this.dragging = false;
         this.hasFired = true;
@@ -134,10 +136,10 @@ export class InputHandlerSystem extends System {
           getRandomInt(
             this.ballsTeam2[0].GetPosition().x *
               Constants.METER_TO_PHYSIC_WORLD +
-              10,
+              30,
             this.ballsTeam2[0].GetPosition().x *
               Constants.METER_TO_PHYSIC_WORLD +
-              200
+              300
           ),
           getRandomInt(
             this.ballsTeam2[0].GetPosition().y *
@@ -145,7 +147,7 @@ export class InputHandlerSystem extends System {
               20,
             this.ballsTeam2[0].GetPosition().y *
               Constants.METER_TO_PHYSIC_WORLD -
-              100
+              200
           )
         );
       }
@@ -153,10 +155,10 @@ export class InputHandlerSystem extends System {
         this.originPosition,
         this.dragPositioning
       );
-      if (this.StateGame.botDelayTime >= 5) {
-        for (let ball of this.ballsTeam2) {
-          ball.SetType(b2BodyType.b2_dynamicBody);
-          ball.ApplyLinearImpulseToCenter(impulse);
+      if (this.StateGame.botDelayTime >= 4.9) {
+        for (let i = 0; i < this.ballsTeam2.length; i++) {
+          this.ballsTeam2[i].SetType(b2BodyType.b2_dynamicBody);
+          this.ballsTeam2[i].SetLinearVelocity(impulse);
         }
         this.StateGame.botDelayTime = -999;
         this.StateGame.CooldownTime = 6;
@@ -172,6 +174,12 @@ export class InputHandlerSystem extends System {
     }
 
     this.shapeRenderer.begin();
+    this.shapeRenderer.circle(
+      true,
+      this.originPosition.x,
+      this.originPosition.y,
+      10
+    );
 
     if (this.dragging && this.hasFired === false) {
       tmpV2
@@ -197,7 +205,7 @@ export class InputHandlerSystem extends System {
         this.originPosition,
         this.dragPositioning
       );
-      for (let i = 0; i < 180; i++) {
+      for (let i = 0; i < 90; i++) {
         const pos = getTrajectoryPoint(this.originPosition, impulse, i);
         trajectories.push(pos.x, pos.y);
       }
@@ -212,6 +220,23 @@ export class InputHandlerSystem extends System {
         );
       }
     }
+
+    // if (
+    //   this.StateGame.WhoisTurning === 1 &&
+    //   this.StateGame.conditionWin === false &&
+    //   this.StateGame.CooldownTime < 0
+    // ) {
+    //   for (let i = 0; i < tempTrajectories.length; i += 2) {
+    //     this.shapeRenderer.circle(
+    //       true,
+    //       tempTrajectories[i],
+    //       tempTrajectories[i + 1],
+    //       5,
+    //       Color.WHITE,
+    //       10
+    //     );
+    //   }
+    // }
     this.shapeRenderer.end();
   }
 }
