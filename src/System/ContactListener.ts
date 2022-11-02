@@ -6,7 +6,6 @@ import {
   b2World,
 } from "box2d.ts";
 import { System, Inject } from "flat-ecs";
-import { getTextOfJSDocComment } from "typescript";
 import { StateGame } from "../dataGame/stateGame";
 
 export class ContactListenerSystem extends System {
@@ -23,7 +22,8 @@ export class ContactListenerSystem extends System {
       const fixtureBData = contact.GetFixtureB().GetBody().GetUserData();
 
       if (fixtureBData === "ball") {
-        contact.GetFixtureB().GetBody().m_activeFlag = false;
+        // disable if the ball colision with any object
+        // contact.GetFixtureB().GetBody().m_activeFlag = false;
       }
       if (fixtureAData.name && fixtureAData.name.startsWith("Person")) {
         fixtureAData.durability += 1;
