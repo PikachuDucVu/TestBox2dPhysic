@@ -265,7 +265,7 @@ export const createGameScreen = async (
   world.addSystem(new PhysicDebugSystem(), true);
   world.addSystem(new ContactListenerSystem(), true);
   world.addSystem(new RenderSystem(), false);
-  // world.addSystem(new CameraGame(), true);
+  world.addSystem(new CameraGame(), true);
 
   return {
     update(delta: number) {
