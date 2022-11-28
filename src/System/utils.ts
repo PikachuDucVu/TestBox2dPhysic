@@ -6,7 +6,11 @@ import {
   b2DynamicTree,
   b2Filter,
   b2FixtureDef,
+  b2Joint,
+  b2JointDef,
+  b2JointType,
   b2PolygonShape,
+  b2WeldJointDef,
   b2World,
 } from "box2d.ts";
 import { Constants } from "../Constant";

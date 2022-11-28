@@ -1,6 +1,5 @@
 import { b2Body, b2BodyType, b2ContactListener, b2World } from "box2d.ts";
 import { World } from "flat-ecs";
-import { stat } from "fs";
 import {
   AssetManager,
   OrthoCamera,
@@ -21,10 +20,9 @@ import { InputHandlerSystem } from "../System/inputHandlerSystem";
 import { NextLevelSystem } from "../System/NextLevelSystem";
 import { TurnOfTeam } from "../System/TurnOfTeam";
 import { createBall, createGround, createPerson } from "../System/utils";
-import { CameraGame } from "./CameraGame";
-
+import { CameraGame } from "../System/CameraGame";
 const stateGame: StateGame = {
-  currentLevel: 1,
+  currentLevel: 2,
   WhoisTurning: 2,
   CooldownTime: 0,
   changeTurn: false,
@@ -267,7 +265,7 @@ export const createGameScreen = async (
   world.addSystem(new PhysicDebugSystem(), true);
   world.addSystem(new ContactListenerSystem(), true);
   world.addSystem(new RenderSystem(), false);
-  world.addSystem(new CameraGame(), true);
+  // world.addSystem(new CameraGame(), true);
 
   return {
     update(delta: number) {
@@ -377,6 +375,13 @@ export const createGameScreen = async (
             world.addSystem(new InputHandlerSystem(), true);
             world.addSystem(new TurnOfTeam(), true);
             world.addSystem(new NextLevelSystem(), true);
+            camera.position.set(
+              ballsTeam2[Math.floor(ballsTeam2.length / 2)].GetPosition().x *
+                Constants.METER_TO_PHYSIC_WORLD,
+              Constants.WORLD_HEIGHT / 2,
+              0
+            );
+            camera.update();
           }, 1500);
         }
       }

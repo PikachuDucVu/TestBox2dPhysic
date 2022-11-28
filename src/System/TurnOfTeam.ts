@@ -1,6 +1,6 @@
 import { b2Body, b2BodyType, b2World } from "box2d.ts";
 import { System, Inject } from "flat-ecs";
-import { Vector2 } from "gdxts";
+import { OrthoCamera, Vector2 } from "gdxts";
 import { Constants } from "../Constant";
 import { StateGame } from "../dataGame/stateGame";
 import { createBall } from "./utils";
@@ -14,6 +14,7 @@ export class TurnOfTeam extends System {
   @Inject("physicWorld") physicWorld: b2World;
   @Inject("originPosition") originPosition: Vector2;
   @Inject("mapData") mapData: any;
+  @Inject("camera") camera: OrthoCamera;
 
   MAP_HEIGHT = 1000;
   ball1: any;
@@ -62,6 +63,14 @@ export class TurnOfTeam extends System {
               )
             );
           }
+          this.camera.position.set(
+            this.ballsTeam2[
+              Math.floor(this.ballsTeam2.length / 2)
+            ].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
+            Constants.WORLD_HEIGHT / 2,
+            0
+          );
+          this.camera.update();
           this.StateGame.changeTurn = false;
           if (this.StateGame.conditionWin === false) {
             if (this.ballsTeam2.length >= 5) {
@@ -109,6 +118,14 @@ export class TurnOfTeam extends System {
               )
             );
           }
+          this.camera.position.set(
+            this.ballsTeam1[
+              Math.floor(this.ballsTeam1.length / 2)
+            ].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
+            Constants.WORLD_HEIGHT / 2,
+            0
+          );
+          this.camera.update();
 
           this.StateGame.changeTurn = false;
           if (this.ballsTeam1.length >= 5) {

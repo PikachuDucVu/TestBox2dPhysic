@@ -8,7 +8,6 @@ import {
   Vector2,
   ViewportInputHandler,
 } from "gdxts";
-import { getTextOfJSDocComment } from "typescript";
 import { Constants } from "../Constant";
 import { StateGame } from "../dataGame/stateGame";
 
@@ -208,6 +207,7 @@ export class InputHandlerSystem extends System {
       for (let i = 0; i < 90; i++) {
         const pos = getTrajectoryPoint(this.originPosition, impulse, i);
         trajectories.push(pos.x, pos.y);
+        tempTrajectories.push(pos.x, pos.y);
       }
       for (let i = 0; i < trajectories.length; i += 2) {
         this.shapeRenderer.circle(
@@ -220,6 +220,16 @@ export class InputHandlerSystem extends System {
         );
       }
     }
+    // for (let i = 0; i < tempTrajectories.length; i += 2) {
+    //   this.shapeRenderer.circle(
+    //     true,
+    //     tempTrajectories[i],
+    //     tempTrajectories[i + 1],
+    //     5,
+    //     Color.BLUE,
+    //     10
+    //   );
+    // }
 
     // if (
     //   this.StateGame.WhoisTurning === 1 &&
