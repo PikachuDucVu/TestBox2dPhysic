@@ -4,6 +4,7 @@ import {
   b2PolygonShape,
   b2ShapeType,
   b2World,
+  b2_pi,
 } from "box2d.ts";
 import { Inject, System } from "flat-ecs";
 import { Color, ShapeRenderer, Vector2 } from "gdxts";
@@ -29,7 +30,7 @@ export class PhysicDebugSystem extends System {
       const fixture = body.GetFixtureList();
       const bodyType = body.GetType();
       const position = body.GetPosition();
-      let angle = body.GetAngle();
+      let angle = (body.GetAngle() * 180) / b2_pi;
       if (body.GetUserData() === "Array") {
       }
       if (fixture) {
@@ -47,7 +48,7 @@ export class PhysicDebugSystem extends System {
         if (type === b2ShapeType.e_polygonShape) {
           const data = fixture.GetShape() as b2PolygonShape;
           this.vertices.length = 0;
-          if (body.GetUserData().name === "Array") {
+          if (body.GetUserData() === "Array") {
             this.shapeRenderer.circle(
               true,
               position.x * Constants.METER_TO_PHYSIC_WORLD,

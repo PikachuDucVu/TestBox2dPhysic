@@ -133,18 +133,26 @@ export class InputHandlerSystem extends System {
         this.StateGame.delayTime = 0;
         this.dragPositioning.set(
           getRandomInt(
-            this.ballsTeam2[0].GetPosition().x *
+            this.ballsTeam2[
+              Math.floor(this.ballsTeam2.length / 2)
+            ].GetPosition().x *
               Constants.METER_TO_PHYSIC_WORLD +
               30,
-            this.ballsTeam2[0].GetPosition().x *
+            this.ballsTeam2[
+              Math.floor(this.ballsTeam2.length / 2)
+            ].GetPosition().x *
               Constants.METER_TO_PHYSIC_WORLD +
               300
           ),
           getRandomInt(
-            this.ballsTeam2[0].GetPosition().y *
+            this.ballsTeam2[
+              Math.floor(this.ballsTeam2.length / 2)
+            ].GetPosition().y *
               Constants.METER_TO_PHYSIC_WORLD -
               20,
-            this.ballsTeam2[0].GetPosition().y *
+            this.ballsTeam2[
+              Math.floor(this.ballsTeam2.length / 2)
+            ].GetPosition().y *
               Constants.METER_TO_PHYSIC_WORLD -
               200
           )

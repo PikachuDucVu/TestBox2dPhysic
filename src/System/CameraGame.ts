@@ -17,7 +17,6 @@ export class CameraGame extends System {
 
   process(): void {
     this.camera.update();
-
     if (this.stateGame.WhoisTurning === 1 && this.ballsTeam1.length) {
       if (this.camera.position.x >= 150 && this.camera.position.x <= 2700) {
         for (let i = 0; i < this.ballsTeam1.length; i++) {
