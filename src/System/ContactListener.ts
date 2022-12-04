@@ -3,12 +3,18 @@ import {
   b2BodyType,
   b2Contact,
   b2ContactListener,
+  b2Distance,
+  b2DistanceJointDef,
   b2JointDef,
   b2JointType,
+  b2RevoluteJointDef,
+  b2Vec2,
   b2World,
 } from "box2d.ts";
 import { System, Inject } from "flat-ecs";
+import { join } from "path";
 import { StateGame } from "../dataGame/stateGame";
+import { physicWorld } from "../GameScreen/GameScreen";
 import { HumanPartType, HumanRig } from "./CreateHuman";
 
 export class ContactListenerSystem extends System {
@@ -21,18 +27,17 @@ export class ContactListenerSystem extends System {
 
   initialized() {
     this.contactListener.BeginContact = function (contact: b2Contact) {
-      const fixtureAData = contact.GetFixtureA().GetBody().GetUserData();
-      const fixtureBData = contact.GetFixtureB().GetBody().GetUserData();
-      if (fixtureAData === fixtureBData) {
-      } else {
-        console.log(fixtureAData, fixtureBData);
-        if (fixtureBData === "ball" && fixtureAData.name !== "Person") {
-          contact.GetFixtureB().GetBody().m_activeFlag = false;
-        }
-      }
-      // if (fixtureBData.name) {
+      const fixtureA = contact.GetFixtureA().GetBody();
+      const fixtureB = contact.GetFixtureB().GetBody();
 
-      // }
+      if (fixtureB.GetUserData() === "ball") {
+        fixtureB.m_activeFlag = false;
+      }
+      if (
+        fixtureB.GetUserData() === "ball" &&
+        fixtureA.GetUserData() === "body"
+      ) {
+      }
     };
 
     setTimeout(() => {

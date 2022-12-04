@@ -112,7 +112,7 @@ export const createGameScreen = async (
   let dragPositioning = new Vector2(0, 0);
 
   const cameraControl: controlCameraGame = {
-    introGame: true,
+    introGame: false,
     startCam1: false,
     startCam2: true,
   };
@@ -142,26 +142,28 @@ export const createGameScreen = async (
 
   switch (stateGame.currentLevel) {
     case 1:
-      for (let i = 0; i < 3; i++) {
-        tempX1 += 1;
-        tempY1 = 4.5;
-        Team1.push(human(physicWorld, tempX1, tempY1));
-      }
-      for (let i = 0; i < 3; i++) {
-        tempX1 += 1;
-        tempY1 = 3.5;
-        Team1.push(human(physicWorld, tempX1, tempY1));
-      }
-      for (let j = 0; j < 3; j++) {
-        tempX2 += 1;
-        tempY2 = 3.5;
-        Team2.push(human(physicWorld, tempX2, tempY2));
-      }
-      for (let j = 0; j < 3; j++) {
-        tempX2 += 1;
-        tempY2 = 4.5;
-        Team2.push(human(physicWorld, tempX2, tempY2));
-      }
+      setTimeout(() => {
+        for (let i = 0; i < 3; i++) {
+          tempX1 += 1;
+          tempY1 = 4.5;
+          Team1.push(human(physicWorld, tempX1, tempY1));
+        }
+        for (let i = 0; i < 3; i++) {
+          tempX1 += 1;
+          tempY1 = 3.5;
+          Team1.push(human(physicWorld, tempX1, tempY1));
+        }
+        for (let j = 0; j < 3; j++) {
+          tempX2 += 1;
+          tempY2 = 3.5;
+          Team2.push(human(physicWorld, tempX2, tempY2));
+        }
+        for (let j = 0; j < 3; j++) {
+          tempX2 += 1;
+          tempY2 = 4.5;
+          Team2.push(human(physicWorld, tempX2, tempY2));
+        }
+      }, 100);
       break;
     case 2:
       tempX1 = 2.25;
@@ -262,7 +264,7 @@ export const createGameScreen = async (
   world.addSystem(new PhysicDebugSystem(), true);
   world.addSystem(new ContactListenerSystem(), true);
   world.addSystem(new RenderSystem(), false);
-  world.addSystem(new CameraGame(), true);
+  // world.addSystem(new CameraGame(), true);
 
   return {
     update(delta: number) {
@@ -284,52 +286,52 @@ export const createGameScreen = async (
         stateGame.botDelayTime = 0;
       }
 
-      if (cameraControl.introGame) {
-        if (cameraControl.startCam2 === true) {
-          if (setCam2Vec === false) {
-            setTimeout(() => {
-              tempVector3.set(delta * 600, 0, 0);
-              setCam2Vec = true;
-            }, 1000);
-          }
-          camera.position.add(tempVector3);
+      // if (cameraControl.introGame) {
+      //   if (cameraControl.startCam2 === true) {
+      //     if (setCam2Vec === false) {
+      //       setTimeout(() => {
+      //         tempVector3.set(delta * 600, 0, 0);
+      //         setCam2Vec = true;
+      //       }, 1000);
+      //     }
+      //     camera.position.add(tempVector3);
 
-          if (
-            camera.position.x >=
-            Team2[3].parts[HumanPartType.Head].GetPosition().x *
-              Constants.METER_TO_PHYSIC_WORLD
-          ) {
-            cameraControl.startCam2 = false;
-            cameraControl.startCam1 = true;
-            tempVector3.set(0, 0, 0);
-          }
-        }
+      //   if (
+      //     camera.position.x >=
+      //     Team2[3].parts[HumanPartType.Head].GetPosition().x *
+      //       Constants.METER_TO_PHYSIC_WORLD
+      //   ) {
+      //     cameraControl.startCam2 = false;
+      //     cameraControl.startCam1 = true;
+      //     tempVector3.set(0, 0, 0);
+      //   }
+      // }
 
-        if (cameraControl.startCam1) {
-          setTimeout(() => {
-            tempVector3.set(-delta * 600, 0, 0);
-          }, 1000);
-          camera.position.add(tempVector3);
+      // if (cameraControl.startCam1) {
+      //   setTimeout(() => {
+      //     tempVector3.set(-delta * 600, 0, 0);
+      //   }, 1000);
+      //   camera.position.add(tempVector3);
 
-          if (
-            camera.position.x <=
-            Team1[3].parts[HumanPartType.Head].GetPosition().x *
-              Constants.METER_TO_PHYSIC_WORLD
-          ) {
-            cameraControl.startCam1 = false;
-            tempVector3.set(0, 0, 0);
-            cameraControl.introGame = false;
-          }
-        }
-      }
+      //   if (
+      //     camera.position.x <=
+      //     Team1[3].parts[HumanPartType.Head].GetPosition().x *
+      //       Constants.METER_TO_PHYSIC_WORLD
+      //   ) {
+      //     cameraControl.startCam1 = false;
+      //     tempVector3.set(0, 0, 0);
+      //     cameraControl.introGame = false;
+      //   }
+      // }
+      // }
 
       if (cameraControl.introGame === false) {
         cameraControl.introGame = true;
-        if (Team1.length >= 6 && !stateGame.setupTeam1) {
-          stateGame.setupTeam1 = true;
+        if (Team1.length >= 6) {
         }
-        if (Team2.length >= 6 && !stateGame.setupTeam2) {
+        if (Team2.length >= 6) {
           stateGame.setupTeam2 = true;
+          console.log("dcm");
           // for (let i = Team2.length - 1; i >= 0; i--) {
           //   for (let j = 0; j < Team2[i].parts.length; j++) {
           //     setTimeout(() => {
@@ -380,13 +382,13 @@ export const createGameScreen = async (
             world.addSystem(new InputHandlerSystem(), true);
             world.addSystem(new TurnOfTeam(), true);
             world.addSystem(new NextLevelSystem(), true);
-            camera.position.set(
-              ballsTeam2[Math.floor(ballsTeam2.length / 2)].GetPosition().x *
-                Constants.METER_TO_PHYSIC_WORLD,
-              Constants.WORLD_HEIGHT / 2,
-              0
-            );
-            camera.update();
+            // camera.position.set(
+            //   ballsTeam2[Math.floor(ballsTeam2.length / 2)].GetPosition().x *
+            //     Constants.METER_TO_PHYSIC_WORLD,
+            //   Constants.WORLD_HEIGHT / 2,
+            //   0
+            // );
+            // camera.update();
           }, 1500);
         }
       }
