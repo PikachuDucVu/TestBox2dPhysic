@@ -221,6 +221,7 @@ export const createGameScreen = async (
       shapeRenderer.setProjection(camera.combined);
 
       cameraUI.update();
+      camera.update();
 
       world.setDelta(delta);
       world.processActiveSystem();
@@ -237,7 +238,7 @@ export const createGameScreen = async (
       if (cameraControl.introGame) {
         if (cameraControl.startCam2 === true) {
           setTimeout(() => {
-            tempVector3.set(delta * 600, 0, 0);
+            tempVector3.set(delta * 500, 0, 0);
           }, 1000);
 
           camera.position.add(tempVector3);
@@ -257,7 +258,7 @@ export const createGameScreen = async (
 
         if (cameraControl.startCam1) {
           setTimeout(() => {
-            tempVector3.set(-delta * 600, 0, 0);
+            tempVector3.set(-delta * 500, 0, 0);
           }, 1000);
           camera.position.add(tempVector3);
 
