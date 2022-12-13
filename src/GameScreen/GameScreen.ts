@@ -104,7 +104,7 @@ export const createGameScreen = async (
   let dragPositioning = new Vector2(0, 0);
 
   const cameraControl: controlCameraGame = {
-    introGame: true,
+    introGame: false,
     startCam1: false,
     startCam2: true,
   };
@@ -212,7 +212,7 @@ export const createGameScreen = async (
   world.addSystem(new PhysicDebugSystem(), true);
   world.addSystem(new ContactListenerSystem(), true);
   world.addSystem(new RenderSystem(), false);
-  world.addSystem(new CameraGame(), true);
+  // world.addSystem(new CameraGame(), true);
 
   return {
     update(delta: number) {
@@ -234,6 +234,7 @@ export const createGameScreen = async (
         stateGame.botDelayTime = 0;
       }
 
+<<<<<<< HEAD
       if (cameraControl.introGame) {
         if (cameraControl.startCam2 === true) {
           setTimeout(() => {
@@ -254,13 +255,36 @@ export const createGameScreen = async (
             tempVector3.set(0, 0, 0);
           }
         }
+=======
+      // if (cameraControl.introGame) {
+      //   if (cameraControl.startCam2 === true) {
+      //     if (setCam2Vec === false) {
+      //       setTimeout(() => {
+      //         tempVector3.set(delta * 600, 0, 0);
+      //         setCam2Vec = true;
+      //       }, 1000);
+      //     }
+      //     camera.position.add(tempVector3);
 
-        if (cameraControl.startCam1) {
-          setTimeout(() => {
-            tempVector3.set(-delta * 600, 0, 0);
-          }, 1000);
-          camera.position.add(tempVector3);
+      //   if (
+      //     camera.position.x >=
+      //     Team2[3].parts[HumanPartType.Head].GetPosition().x *
+      //       Constants.METER_TO_PHYSIC_WORLD
+      //   ) {
+      //     cameraControl.startCam2 = false;
+      //     cameraControl.startCam1 = true;
+      //     tempVector3.set(0, 0, 0);
+      //   }
+      // }
+>>>>>>> 208262f20f5123b089f43275fd0ee8f00a3900dd
 
+      // if (cameraControl.startCam1) {
+      //   setTimeout(() => {
+      //     tempVector3.set(-delta * 600, 0, 0);
+      //   }, 1000);
+      //   camera.position.add(tempVector3);
+
+<<<<<<< HEAD
           if (
             camera.position.x <=
             Team1[Math.floor(Team2.length / 2)].parts[
@@ -281,7 +305,27 @@ export const createGameScreen = async (
           stateGame.setupTeam1 = true;
         }
         if (Team2.length && !stateGame.setupTeam2) {
+=======
+      //   if (
+      //     camera.position.x <=
+      //     Team1[3].parts[HumanPartType.Head].GetPosition().x *
+      //       Constants.METER_TO_PHYSIC_WORLD
+      //   ) {
+      //     cameraControl.startCam1 = false;
+      //     tempVector3.set(0, 0, 0);
+      //     cameraControl.introGame = false;
+      //   }
+      // }
+      // }
+
+      if (cameraControl.introGame === false) {
+        cameraControl.introGame = true;
+        if (Team1.length >= 6) {
+        }
+        if (Team2.length >= 6) {
+>>>>>>> 208262f20f5123b089f43275fd0ee8f00a3900dd
           stateGame.setupTeam2 = true;
+          console.log("dcm");
           // for (let i = Team2.length - 1; i >= 0; i--) {
           //   for (let j = 0; j < Team2[i].parts.length; j++) {
           //     setTimeout(() => {
@@ -332,6 +376,7 @@ export const createGameScreen = async (
             world.addSystem(new NextLevelSystem(), true);
             world.addSystem(new InputHandlerSystem(), true);
             world.addSystem(new TurnOfTeam(), true);
+<<<<<<< HEAD
             camera.position.set(
               ballsTeam2[Math.floor(ballsTeam2.length / 2)].GetPosition().x *
                 Constants.METER_TO_PHYSIC_WORLD,
@@ -339,6 +384,16 @@ export const createGameScreen = async (
               0
             );
             camera.update();
+=======
+            world.addSystem(new NextLevelSystem(), true);
+            // camera.position.set(
+            //   ballsTeam2[Math.floor(ballsTeam2.length / 2)].GetPosition().x *
+            //     Constants.METER_TO_PHYSIC_WORLD,
+            //   Constants.WORLD_HEIGHT / 2,
+            //   0
+            // );
+            // camera.update();
+>>>>>>> 208262f20f5123b089f43275fd0ee8f00a3900dd
           }, 1500);
         }
       }
