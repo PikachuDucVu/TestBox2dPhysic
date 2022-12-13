@@ -68,27 +68,23 @@ export class TurnOfTeam extends System {
               )
             );
           }
-          // this.camera.position.set(
-          //   this.ballsTeam2[
-          //     Math.floor(this.ballsTeam2.length / 2)
-          //   ].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
-          //   Constants.WORLD_HEIGHT / 2,
-          //   0
-          // );
+          this.camera.position.set(
+            this.ballsTeam2[
+              Math.floor(this.ballsTeam2.length / 2)
+            ].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
+            Constants.WORLD_HEIGHT / 2,
+            0
+          );
           this.camera.update();
           this.StateGame.changeTurn = false;
           if (this.StateGame.conditionWin === false) {
             this.originPosition.set(
               this.ballsTeam2[
                 Math.floor(this.ballsTeam2.length / 2)
-              ].GetPosition().x *
-                Constants.METER_TO_PHYSIC_WORLD +
-                100,
+              ].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
               this.ballsTeam2[
                 Math.floor(this.ballsTeam2.length / 2)
-              ].GetPosition().y *
-                Constants.METER_TO_PHYSIC_WORLD +
-                100
+              ].GetPosition().y * Constants.METER_TO_PHYSIC_WORLD
             );
           }
           break;
@@ -120,13 +116,13 @@ export class TurnOfTeam extends System {
               )
             );
           }
-          // this.camera.position.set(
-          //   this.ballsTeam1[
-          //     Math.floor(this.ballsTeam1.length / 2)
-          //   ].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
-          //   Constants.WORLD_HEIGHT / 2,
-          //   0
-          // );
+          this.camera.position.set(
+            this.ballsTeam1[
+              Math.floor(this.ballsTeam1.length / 2)
+            ].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
+            Constants.WORLD_HEIGHT / 2,
+            0
+          );
           this.camera.update();
 
           this.StateGame.changeTurn = false;
@@ -134,14 +130,10 @@ export class TurnOfTeam extends System {
             this.originPosition.set(
               this.ballsTeam1[
                 Math.floor(this.ballsTeam1.length / 2)
-              ].GetPosition().x *
-                Constants.METER_TO_PHYSIC_WORLD +
-                100,
+              ].GetPosition().x * Constants.METER_TO_PHYSIC_WORLD,
               this.ballsTeam1[
                 Math.floor(this.ballsTeam1.length / 2)
-              ].GetPosition().y *
-                Constants.METER_TO_PHYSIC_WORLD +
-                100
+              ].GetPosition().y * Constants.METER_TO_PHYSIC_WORLD
             );
           }
           // this.originPosition.set(

@@ -1,12 +1,4 @@
-import {
-  b2Body,
-  b2BodyType,
-  b2ContactListener,
-  b2DegToRad,
-  b2RevoluteJointDef,
-  b2Vec2,
-  b2World,
-} from "box2d.ts";
+import { b2Body, b2ContactListener, b2World } from "box2d.ts";
 import { World } from "flat-ecs";
 import {
   AssetManager,
@@ -31,7 +23,7 @@ import { createBall, createGround } from "../System/utils";
 import { human, HumanPartType, HumanRig } from "../System/CreateHuman";
 import { CameraGame } from "../System/CameraGame";
 const stateGame: StateGame = {
-  currentLevel: 1,
+  currentLevel: 3,
   WhoisTurning: 2,
   CooldownTime: 0,
   changeTurn: false,
@@ -134,117 +126,76 @@ export const createGameScreen = async (
   world.register("ballsTeam2", ballsTeam2);
   world.register("StateGame", stateGame);
   world.register("contactListener", contactListener);
+  world.register("grounds", grounds);
+  world.register("cameraControl", cameraControl);
 
-  let tempX1 = 1;
+  let tempX1 = 0.925;
   let tempY1 = 6.5;
-  let tempX2 = 22.1;
+  let tempX2 = 22.5;
   let tempY2 = 10;
 
   switch (stateGame.currentLevel) {
     case 1:
       for (let i = 0; i < 3; i++) {
-        tempX1 += 1;
+        tempX1 += 1.1;
         tempY1 = 4.5;
         Team1.push(human(physicWorld, tempX1, tempY1));
       }
-      for (let i = 0; i < 3; i++) {
-        tempX1 += 1;
+      for (let i = 0; i < 2; i++) {
+        tempX1 += 1.15;
         tempY1 = 3.5;
         Team1.push(human(physicWorld, tempX1, tempY1));
       }
-      for (let j = 0; j < 3; j++) {
-        tempX2 += 1;
+      for (let j = 0; j < 1; j++) {
+        tempX2 += 1.15;
         tempY2 = 3.5;
         Team2.push(human(physicWorld, tempX2, tempY2));
       }
-      for (let j = 0; j < 3; j++) {
-        tempX2 += 1;
+      for (let j = 0; j < 1; j++) {
+        tempX2 += 3;
         tempY2 = 4.5;
         Team2.push(human(physicWorld, tempX2, tempY2));
       }
+      // for (let j = 0; j < 3; j++) {
+      //   tempX2 += 1.15;
+      //   tempY2 = 4.5;
+      //   Team2.push(human(physicWorld, tempX2, tempY2));
+      // }
       break;
     case 2:
-      tempX1 = 2.25;
+      tempX1 = 2;
       tempY1 = 3.5;
-      tempX2 = 26.5;
+      tempX2 = 28;
 
-      for (let i = 0; i < 6; i++) {
-        tempX1 += 0.5;
+      for (let i = 0; i < 5; i++) {
+        tempX1 += 1;
         tempY1 = 3.5;
-        for (let j = 0; j < 2; j++) {
-          Team1
-            .push
-            // createPerson(
-            //   physicWorld,
-            //   tempX1,
-            //   tempY1++,
-            //   Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
-            //   Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
-            //   { name: "Person" },
-            //   Constants.PERSONTEAM1_CATEGORY_BIT,
-            //   Constants.PERSONTEAM1_MASK_BIT
-            // )
-            ();
-        }
-        tempX2 -= 0.5;
-        tempY2 = 5;
-        for (let j = 0; j < 2; j++) {
-          Team2
-            .push
-            // createPerson(
-            //   physicWorld,
-            //   tempX2,
-            //   (tempY2 -= 0.5),
-            //   Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
-            //   Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
-            //   { name: "Person" },
-            //   Constants.PERSONTEAM1_CATEGORY_BIT,
-            //   Constants.PERSONTEAM1_MASK_BIT
-            // )
-            ();
-        }
+
+        Team1.push(human(physicWorld, tempX1, tempY1));
+
+        tempX2 -= 1;
+        tempY2 = 3.5;
+
+        Team2.push(human(physicWorld, tempX2, tempY2));
       }
       break;
     case 3:
-      tempX1 = 2.25;
+      tempX1 = 2;
       tempY1 = 3.5;
-      tempX2 = 26.5;
+      tempX2 = 28;
 
-      for (let i = 0; i < 6; i++) {
-        tempX1 += 0.5;
+      for (let i = 0; i < 5; i++) {
+        tempX1 += 1.15;
         tempY1 = 3.5;
-        for (let j = 0; j < 2; j++) {
-          // Team1.push(
-          //   createPerson(
-          //     physicWorld,
-          //     tempX1,
-          //     tempY1++,
-          //     Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
-          //     Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
-          //     { name: "Person" },
-          //     Constants.PERSONTEAM1_CATEGORY_BIT,
-          //     Constants.PERSONTEAM1_MASK_BIT
-          //   )
-          // );
-        }
-        tempX2 -= 0.5;
-        tempY2 = 5;
-        for (let j = 0; j < 3; j++) {
-          Team2
-            .push
-            // createPerson(
-            //   physicWorld,
-            //   tempX2,
-            //   (tempY2 -= 0.5),
-            //   Constants.PERSON_WIDTH / Constants.METER_TO_PHYSIC_WORLD,
-            //   Constants.PERSON_HEIGHT / Constants.METER_TO_PHYSIC_WORLD,
-            //   { name: "Person" },
-            //   Constants.PERSONTEAM1_CATEGORY_BIT,
-            //   Constants.PERSONTEAM1_MASK_BIT
-            // )
-            ();
-        }
+
+        Team1.push(human(physicWorld, tempX1, tempY1));
+
+        tempX2 -= 1.15;
+        tempY2 = 3.5;
+
+        Team2.push(human(physicWorld, tempX2, tempY2));
       }
+
       break;
     default:
       break;
@@ -257,7 +208,6 @@ export const createGameScreen = async (
   );
 
   const tempVector3 = new Vector3();
-  let setCam2Vec = false;
 
   world.addSystem(new PhysicDebugSystem(), true);
   world.addSystem(new ContactListenerSystem(), true);
@@ -286,17 +236,17 @@ export const createGameScreen = async (
 
       if (cameraControl.introGame) {
         if (cameraControl.startCam2 === true) {
-          if (setCam2Vec === false) {
-            setTimeout(() => {
-              tempVector3.set(delta * 600, 0, 0);
-              setCam2Vec = true;
-            }, 1000);
-          }
+          setTimeout(() => {
+            tempVector3.set(delta * 600, 0, 0);
+          }, 1000);
+
           camera.position.add(tempVector3);
 
           if (
             camera.position.x >=
-            Team2[3].parts[HumanPartType.Head].GetPosition().x *
+            Team2[Math.floor(Team2.length / 2)].parts[
+              HumanPartType.Head
+            ].GetPosition().x *
               Constants.METER_TO_PHYSIC_WORLD
           ) {
             cameraControl.startCam2 = false;
@@ -313,7 +263,9 @@ export const createGameScreen = async (
 
           if (
             camera.position.x <=
-            Team1[3].parts[HumanPartType.Head].GetPosition().x *
+            Team1[Math.floor(Team2.length / 2)].parts[
+              HumanPartType.Head
+            ].GetPosition().x *
               Constants.METER_TO_PHYSIC_WORLD
           ) {
             cameraControl.startCam1 = false;
@@ -325,10 +277,10 @@ export const createGameScreen = async (
 
       if (cameraControl.introGame === false) {
         cameraControl.introGame = true;
-        if (Team1.length >= 6 && !stateGame.setupTeam1) {
+        if (Team1.length && !stateGame.setupTeam1) {
           stateGame.setupTeam1 = true;
         }
-        if (Team2.length >= 6 && !stateGame.setupTeam2) {
+        if (Team2.length && !stateGame.setupTeam2) {
           stateGame.setupTeam2 = true;
           // for (let i = Team2.length - 1; i >= 0; i--) {
           //   for (let j = 0; j < Team2[i].parts.length; j++) {
@@ -377,9 +329,9 @@ export const createGameScreen = async (
             // }
             world.register("originPosition", originPosition);
             world.register("dragPositioning", dragPositioning);
+            world.addSystem(new NextLevelSystem(), true);
             world.addSystem(new InputHandlerSystem(), true);
             world.addSystem(new TurnOfTeam(), true);
-            world.addSystem(new NextLevelSystem(), true);
             camera.position.set(
               ballsTeam2[Math.floor(ballsTeam2.length / 2)].GetPosition().x *
                 Constants.METER_TO_PHYSIC_WORLD,

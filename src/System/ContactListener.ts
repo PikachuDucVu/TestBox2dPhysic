@@ -1,14 +1,15 @@
 import {
   b2Body,
-  b2BodyType,
   b2Contact,
   b2ContactListener,
-  b2JointDef,
-  b2JointType,
+  b2DistanceJointDef,
+  b2RevoluteJoint,
+  b2RevoluteJointDef,
   b2World,
 } from "box2d.ts";
 import { System, Inject } from "flat-ecs";
 import { StateGame } from "../dataGame/stateGame";
+import { physicWorld } from "../GameScreen/GameScreen";
 import { HumanPartType, HumanRig } from "./CreateHuman";
 
 export class ContactListenerSystem extends System {
@@ -20,19 +21,33 @@ export class ContactListenerSystem extends System {
   @Inject("StateGame") StateGame: StateGame;
 
   initialized() {
-    this.contactListener.BeginContact = function (contact: b2Contact) {
-      const fixtureAData = contact.GetFixtureA().GetBody().GetUserData();
-      const fixtureBData = contact.GetFixtureB().GetBody().GetUserData();
-      if (fixtureAData === fixtureBData) {
-      } else {
-        console.log(fixtureAData, fixtureBData);
-        if (fixtureBData === "ball" && fixtureAData.name !== "Person") {
-          contact.GetFixtureB().GetBody().m_activeFlag = false;
-        }
-      }
-      // if (fixtureBData.name) {
+    const jd = new b2RevoluteJointDef();
 
-      // }
+    this.contactListener.BeginContact = function (contact: b2Contact) {
+      const fixtureAbody = contact.GetFixtureA().GetBody();
+      const fixtureBbody = contact.GetFixtureB().GetBody();
+      if (
+        fixtureBbody.GetUserData() === "ball" &&
+        fixtureAbody.GetUserData() === "body"
+      ) {
+        jd.Initialize(
+          fixtureAbody,
+          fixtureBbody,
+          fixtureAbody.GetWorldCenter()
+        );
+        jd.collideConnected = false;
+        jd.lowerAngle = 0;
+        jd.upperAngle = 0;
+        jd.enableLimit = true;
+        physicWorld.m_locked = false;
+        physicWorld.CreateJoint(jd);
+      }
+      if (
+        fixtureAbody.GetUserData() !== "body" &&
+        fixtureBbody.GetUserData() === "ball"
+      ) {
+        fixtureBbody.m_activeFlag = false;
+      }
     };
 
     setTimeout(() => {
@@ -43,8 +58,10 @@ export class ContactListenerSystem extends System {
   process(): void {
     for (let i = 0; i < this.Team1.length; i++) {
       if (
-        this.Team1[i].parts[HumanPartType.Head].GetPosition().y <= 2.42 &&
-        this.Team1[i].parts[HumanPartType.Head].GetPosition().y <= 2.42
+        Math.abs(
+          this.Team1[i].parts[HumanPartType.Torso2].GetPosition().y -
+            this.Team1[i].parts[HumanPartType.Head].GetPosition().y
+        ) <= 0.3
       ) {
         for (let j = this.Team1[i].parts.length - 1; j >= 0; j--) {
           this.physicWorld.DestroyBody(this.Team1[i].parts[j]);
@@ -55,8 +72,10 @@ export class ContactListenerSystem extends System {
     }
     for (let i = 0; i < this.Team2.length; i++) {
       if (
-        this.Team2[i].parts[HumanPartType.Head].GetPosition().y <= 2.42 &&
-        this.Team2[i].parts[HumanPartType.Head].GetPosition().y <= 2.42
+        Math.abs(
+          this.Team2[i].parts[HumanPartType.Torso2].GetPosition().y -
+            this.Team2[i].parts[HumanPartType.Head].GetPosition().y
+        ) <= 0.3
       ) {
         for (let j = this.Team2[i].parts.length - 1; j >= 0; j--) {
           this.physicWorld.DestroyBody(this.Team2[i].parts[j]);

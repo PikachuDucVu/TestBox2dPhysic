@@ -7,6 +7,7 @@ import {
   b2PolygonShape,
   b2World,
 } from "box2d.ts";
+import { Constants } from "../Constant";
 
 export const createGround = (
   physicWorld: b2World,
@@ -42,6 +43,7 @@ export const createBall = (
   circle.m_radius = radius;
   const fixtureDef = new b2FixtureDef();
   fixtureDef.shape = circle;
+  fixtureDef.density = 2;
 
   fixtureDef.filter.categoryBits = categoryBits;
   fixtureDef.filter.maskBits = maskBits;
@@ -49,64 +51,6 @@ export const createBall = (
   const body = physicWorld.CreateBody(bodyDef);
   body.CreateFixture(fixtureDef);
   body.SetUserData("ball");
-  return body;
-};
-
-export const createPerson = (
-  physicWorld: b2World,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  userData: { name: string },
-  categoryBits: number,
-  maskBits: number
-): b2Body => {
-  const bodyDef = new b2BodyDef();
-  bodyDef.type = b2BodyType.b2_dynamicBody;
-  bodyDef.position.Set(x + width / 2, y + height / 2);
-  const body = physicWorld.CreateBody(bodyDef);
-  const shape = new b2PolygonShape();
-  shape.SetAsBox(width / 2, height / 2, { x: width / 2, y: -height / 2 });
-  body.SetUserData({
-    name: userData.name,
-    durability: 0,
-  });
-
-  body.CreateFixture(shape);
-  return body;
-};
-
-export const createArray = (
-  physicWorld: b2World,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  angle: number,
-  categoryBits: number,
-  maskBits: number
-): b2Body => {
-  const bodyDef = new b2BodyDef();
-  bodyDef.type = b2BodyType.b2_staticBody;
-  bodyDef.position.Set(x, y);
-  const body = physicWorld.CreateBody(bodyDef);
-  const shape = new b2PolygonShape();
-
-  shape.SetAsBox(width / 2, height / 2, {
-    x: width / 4 - 0.1,
-    y: height / 4 - 0.2,
-  });
-  body.SetUserData("Array");
-  body.SetAngle(angle);
-
-  const fixtureDef = new b2FixtureDef();
-  fixtureDef.shape = shape;
-  fixtureDef.filter.categoryBits = categoryBits;
-  fixtureDef.filter.maskBits = maskBits;
-
-  body.CreateFixture(fixtureDef);
-
   return body;
 };
 
@@ -118,6 +62,8 @@ export const head = (physicWorld: b2World, startX: number, startY: number) => {
   fixtureDef.density = 1;
   fixtureDef.friction = 0.4;
   fixtureDef.restitution = 0.3;
+  // fixtureDef.filter.categoryBits = Constants.BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.BODY_MASK_BIT;
   bodyDef.position.Set(startX, startY);
   const body = physicWorld.CreateBody(bodyDef);
   body.SetUserData("body");
@@ -138,6 +84,10 @@ export const torso1 = (
   fixtureDef.friction = 0.4;
   fixtureDef.restitution = 0.1;
   fixtureDef.shape = shape;
+  // fixtureDef.filter.categoryBits = Constants.BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.BODY_MASK_BIT;
+  // fixtureDef.filter.categoryBits = Constants.TORSO1_BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.TORSO1_BODY_MASK_BIT;
   bodyDef.position.Set(startX, startY - 3.8 / 10);
   const body = physicWorld.CreateBody(bodyDef);
   body.SetUserData("body");
@@ -158,6 +108,10 @@ export const torso2 = (
   fixtureDef.friction = 0.4;
   fixtureDef.restitution = 0.1;
   fixtureDef.shape = shape;
+  // fixtureDef.filter.categoryBits = Constants.BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.BODY_MASK_BIT;
+  // fixtureDef.filter.categoryBits = Constants.TORSO2_BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.TORSO2_BODY_MASK_BIT;
   bodyDef.position.Set(startX, startY - 4.3 / 10);
   const body = physicWorld.CreateBody(bodyDef);
   body.CreateFixture(fixtureDef);
@@ -178,6 +132,10 @@ export const torso3 = (
   fixtureDef.friction = 0.4;
   fixtureDef.restitution = 0.1;
   fixtureDef.shape = shape;
+  // fixtureDef.filter.categoryBits = Constants.BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.BODY_MASK_BIT;
+  // fixtureDef.filter.categoryBits = Constants.TORSO3_BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.TORSO3_BODY_MASK_BIT;
   bodyDef.position.Set(startX, startY - 5.8 / 10);
   const body = physicWorld.CreateBody(bodyDef);
   body.SetUserData("body");
@@ -197,6 +155,10 @@ export const leftArm = (
   fixtureDef.friction = 0.4;
   fixtureDef.restitution = 0.1;
   fixtureDef.shape = shape;
+  // fixtureDef.filter.categoryBits = Constants.BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.BODY_MASK_BIT;
+  // fixtureDef.filter.categoryBits = Constants.LEFTARM_BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.LEFTARM_BODY_MASK_BIT;
   shape.SetAsBox(0.65 / 10, 1.8 / 10);
   bodyDef.position.Set(startX - 3.0 / 10, startY - 4.0 / 10);
   const body = physicWorld.CreateBody(bodyDef);
@@ -218,6 +180,10 @@ export const rightArm = (
   fixtureDef.friction = 0.4;
   fixtureDef.restitution = 0.1;
   fixtureDef.shape = shape;
+  // fixtureDef.filter.categoryBits = Constants.BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.BODY_MASK_BIT;
+  // fixtureDef.filter.categoryBits = Constants.RIGHTARM_BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.RIGHTARM_BODY_MASK_BIT;
   bodyDef.position.Set(startX + 3.0 / 10, startY - 4.0 / 10);
   const body = physicWorld.CreateBody(bodyDef);
   body.SetUserData("body");
@@ -238,6 +204,10 @@ export const upperLeftLeg = (
   fixtureDef.friction = 0.4;
   fixtureDef.restitution = 0.1;
   fixtureDef.shape = shape;
+  // fixtureDef.filter.categoryBits = Constants.BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.BODY_MASK_BIT;
+  // fixtureDef.filter.categoryBits = Constants.UPPERLEFTLEG_BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.UPPERLEFTLEG_BODY_MASK_BIT;
   bodyDef.position.Set(startX - 0.8 / 10, startY - 8.5 / 10);
   const body = physicWorld.CreateBody(bodyDef);
   body.SetUserData("body");
@@ -258,6 +228,10 @@ export const upperRightLeg = (
   fixtureDef.friction = 0.4;
   fixtureDef.restitution = 0.1;
   fixtureDef.shape = shape;
+  // fixtureDef.filter.categoryBits = Constants.BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.BODY_MASK_BIT;
+  // fixtureDef.filter.categoryBits = Constants.UPPERRIGHTLEG_BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.UPPERRIGHTLEG_BODY_MASK_BIT;
   bodyDef.position.Set(startX + 0.8 / 10, startY - 8.5 / 10);
   const body = physicWorld.CreateBody(bodyDef);
   body.SetUserData("body");
@@ -278,6 +252,10 @@ export const lowerLeftLeg = (
   fixtureDef.friction = 0.4;
   fixtureDef.restitution = 0.1;
   fixtureDef.shape = shape;
+  // fixtureDef.filter.categoryBits = Constants.BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.BODY_MASK_BIT;
+  // fixtureDef.filter.categoryBits = Constants.LOWERLEFTLEG_BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.LOWERLEFTLEG_BODY_MASK_BIT;
   bodyDef.position.Set(startX - 0.8 / 10, startY - 12.0 / 10);
   const body = physicWorld.CreateBody(bodyDef);
   body.SetUserData("body");
@@ -298,6 +276,10 @@ export const lowerRightLeg = (
   fixtureDef.friction = 0.4;
   fixtureDef.restitution = 0.1;
   fixtureDef.shape = shape;
+  // fixtureDef.filter.categoryBits = Constants.BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.BODY_MASK_BIT;
+  // fixtureDef.filter.categoryBits = Constants.LOWERLEFTLEG_BODY_CATEGORY_BIT;
+  // fixtureDef.filter.maskBits = Constants.LOWERRIGHTLEG_BODY_MASK_BIT;
   bodyDef.position.Set(startX + 0.8 / 10, startY - 12.0 / 10);
   const body = physicWorld.CreateBody(bodyDef);
   body.SetUserData("body");

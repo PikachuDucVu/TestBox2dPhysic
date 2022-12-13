@@ -22,6 +22,7 @@ const GRAVITY = -10;
 function getRandomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
+export let hasFired = false;
 const getTrajectoryPoint = (
   startPos: Vector2,
   startV: Vector2,
@@ -70,7 +71,6 @@ export class InputHandlerSystem extends System {
   @Inject("shapeRenderer") shapeRenderer: ShapeRenderer;
   @Inject("camera") camera: OrthoCamera;
 
-  hasFired = false;
   dragging = false;
   angle = 0;
   temp: any;
@@ -92,7 +92,7 @@ export class InputHandlerSystem extends System {
     } else {
       if (
         this.dragging &&
-        this.hasFired === false &&
+        hasFired === false &&
         this.StateGame.WhoisTurning === 1
       ) {
         const impulse = calculateImpulse(
@@ -101,31 +101,31 @@ export class InputHandlerSystem extends System {
         );
         if (
           this.StateGame.WhoisTurning === 1 &&
-          this.hasFired === false &&
+          hasFired === false &&
           this.StateGame.conditionWin === false
         ) {
           this.StateGame.CooldownTime = 6;
           this.dragging = false;
-          this.hasFired = true;
+          hasFired = true;
         }
         for (let i = 0; i < this.ballsTeam1.length; i++) {
           this.ballsTeam1[i].SetType(b2BodyType.b2_dynamicBody);
           this.ballsTeam1[i].SetLinearVelocity(impulse);
         }
         this.dragging = false;
-        this.hasFired = true;
+        hasFired = true;
         this.StateGame.CooldownTime = 6;
 
         setTimeout(() => {
           this.StateGame.changeTurn = true;
-          this.hasFired = false;
+          hasFired = false;
         }, 6000);
       }
     }
     // BOT
     if (
       this.StateGame.WhoisTurning === 2 &&
-      this.hasFired === false &&
+      hasFired === false &&
       this.StateGame.conditionWin === false
     ) {
       this.dragging = true;
@@ -169,12 +169,12 @@ export class InputHandlerSystem extends System {
         }
         this.StateGame.botDelayTime = -999;
         this.StateGame.CooldownTime = 6;
-        this.hasFired = true;
+        hasFired = true;
         this.dragging = false;
         setTimeout(() => {
           this.StateGame.changeTurn = true;
           setTimeout(() => {
-            this.hasFired = false;
+            hasFired = false;
           }, 50);
         }, 6000);
       }
@@ -188,7 +188,7 @@ export class InputHandlerSystem extends System {
       10
     );
 
-    if (this.dragging && this.hasFired === false) {
+    if (this.dragging && hasFired === false) {
       tmpV2
         .set(this.originPosition.x, this.originPosition.y)
         .sub(this.dragPositioning.x, this.dragPositioning.y);
@@ -228,33 +228,6 @@ export class InputHandlerSystem extends System {
         );
       }
     }
-    // for (let i = 0; i < tempTrajectories.length; i += 2) {
-    //   this.shapeRenderer.circle(
-    //     true,
-    //     tempTrajectories[i],
-    //     tempTrajectories[i + 1],
-    //     5,
-    //     Color.BLUE,
-    //     10
-    //   );
-    // }
-
-    // if (
-    //   this.StateGame.WhoisTurning === 1 &&
-    //   this.StateGame.conditionWin === false &&
-    //   this.StateGame.CooldownTime < 0
-    // ) {
-    //   for (let i = 0; i < tempTrajectories.length; i += 2) {
-    //     this.shapeRenderer.circle(
-    //       true,
-    //       tempTrajectories[i],
-    //       tempTrajectories[i + 1],
-    //       5,
-    //       Color.WHITE,
-    //       10
-    //     );
-    //   }
-    // }
     this.shapeRenderer.end();
   }
 }

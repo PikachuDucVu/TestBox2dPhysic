@@ -8,12 +8,9 @@ export class CameraGame extends System {
   @Inject("StateGame") stateGame: StateGame;
   @Inject("ballsTeam1") ballsTeam1: b2Body[];
   @Inject("ballsTeam2") ballsTeam2: b2Body[];
-  offsetCameraX: number;
   temp: number;
 
-  initialized(): void {
-    this.offsetCameraX = 150;
-  }
+  initialized(): void {}
 
   process(): void {
     this.camera.update();
